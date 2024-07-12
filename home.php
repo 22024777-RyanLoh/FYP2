@@ -14,7 +14,7 @@ if (isset($_SESSION['login_user_id'])) {
     $sql = "SELECT user_role FROM user WHERE user_id = '$userId'";
     $result = mysqli_query($conn, $sql);
     if ($result) {
-        $row = mysqli_fetch_assoc($result); 
+        $row = mysqli_fetch_assoc($result);
         $isAdmin = ($row['user_role'] === 'Admin');
     }
 }
@@ -30,13 +30,10 @@ function fetchDomainname($conn) {
         }
     }
     return $domains;
-
 }
-
 
 // Fetch domain names from the database
 $domains = fetchDomainname($conn);
-
 
 // Function to fetch domain information
 function fetchDomainInfo($conn, $domainName) {
@@ -110,8 +107,8 @@ if (!isset($_SESSION['click_counts'])) {
                         <?php if($isAdmin): ?>
                             <li><a href="login222/dashboard.php">Admin Panel</a></li>
                         <?php endif; ?>
-                        <li><a href="edit.php">Edit</a></li>
-                        <li><a href="upload.php">Upload</a></li>
+                        <li><a href="edit.php">Domain</a></li>
+                        <li><a href="upload.php">Project</a></li>
                         <li><a href="logout.php">Sign out</a></li>
                     <?php else: ?>
                         <li><a href="Login222/index.php">Log in</a></li>
@@ -120,45 +117,50 @@ if (!isset($_SESSION['click_counts'])) {
             </div>
             <i class="fas fa-bars" onclick="showmenu()"></i>
         </nav>
-    
+
+        
+
         <div class="text-box">
             <h1>Welcome to SOI Projects</h1>
             <p>Scroll down to see your Projects</p>
         </div>
     </section>
 
+    <section class="filter">
     <?php if ($isAdmin): ?>
-    <!-- Add a filter button -->
-    <button class="filter-btn" onclick="toggleFilterBox()">Filter</button>
-
-    <!-- Add a filter box -->
-    <div class="filter-box" id="filterBox">
-      <div class="filter-header">
-        <span>Filter Projects</span>
-        <i class="fas fa-times" onclick="toggleFilterBox()"></i>
-      </div>
-      <div class="filter-content">
-        <div class="filter-items">
-          <label><input type="checkbox" value="Application Development"> Application Development</label>
-          <label><input type="checkbox" value="Artificial Intelligence"> Artificial Intelligence</label>
-          <label><input type="checkbox" value="Data Analytics"> Data Analytics</label>
-          <label><input type="checkbox" value="Fintech"> Fintech</label>
-          <label><input type="checkbox" value="Infocomm Security"> Infocomm Security</label>
-          <label><input type="checkbox" value="Internet of Things"> Internet of Things</label>
-          <label><input type="checkbox" value="Network & Systems"> Network & Systems</label>
-          <label><input type="checkbox" value="Specialist Diploma"> Specialist Diploma</label>
-          <label><input type="checkbox" value="Staff Project"> Staff Project</label>
+        <div class="filter-container">
+            <button class="filter-btn" onclick="toggleFilterBox()">Filter</button>
+            <div class="filter-box" id="filterBox">
+                <div class="filter-header">
+                    <span>Filter Projects</span>
+                    <i class="fas fa-times" onclick="toggleFilterBox()"></i>
+                </div>
+                <div class="filter-content">
+                    <div class="filter-items">
+                        <label><input type="checkbox" value="Application Development"> Application Development</label>
+                        <label><input type="checkbox" value="Artificial Intelligence"> Artificial Intelligence</label>
+                        <label><input type="checkbox" value="Data Analytics"> Data Analytics</label>
+                        <label><input type="checkbox" value="Fintech"> Fintech</label>
+                        <label><input type="checkbox" value="Infocomm Security"> Infocomm Security</label>
+                        <label><input type="checkbox" value="Internet of Things"> Internet of Things</label>
+                        <label><input type="checkbox" value="Network & Systems"> Network & Systems</label>
+                        <label><input type="checkbox" value="Specialist Diploma"> Specialist Diploma</label>
+                        <label><input type="checkbox" value="Staff Project"> Staff Project</label>
+                    </div>
+                    <div class="filter-actions">
+                        <button onclick="applyFilter()">Apply Filter</button>
+                        <button onclick="clearFilter()">Clear Filter</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="filter-actions">
-          <button onclick="applyFilter()">Apply Filter</button>
-          <button onclick="clearFilter()">Clear Filter</button>
-        </div>
-      </div>
-    </div>
-<?php endif; ?>
+        <?php endif; ?>
+    </section>
 
     <section class="cards">
+        
         <?php foreach ($domains as $key => $domain) : ?>
+            
             <div class="card card<?php echo $key + 1; ?>" style="background-image: linear-gradient(rgba(4,9,30,0.5), rgba(4,9,30,0.5)),url('<?php echo isset($backgroundImages[$key]) ? $backgroundImages[$key] : ''; ?>');">
                 <div class="card-text">
                     <h2><?php echo $domain; ?></h2>
@@ -171,6 +173,7 @@ if (!isset($_SESSION['click_counts'])) {
                 </div>
             </div>
         <?php endforeach; ?>
+        
     </section>
 
     <section class="bottom">

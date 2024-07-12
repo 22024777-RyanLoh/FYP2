@@ -74,6 +74,7 @@ nav2 {
     display: flex;
     padding: 2% 6%;
     justify-content: space-between;
+    margin-top: 130px;
     align-items: center;
 }
 
@@ -167,25 +168,25 @@ nav .fa {
         padding: 30px;
     }
 }
-.project{
+
+.project {
     width: 80%;
     margin: auto;
     text-align: center;
     padding-top: 100px;
 }
 
-h1{
+h1 {
     font-size: 36px;
     font-weight: 600;
 }
 
-p{
+p {
     color: #ffffff;
     font-size: 14px;
     font-weight: 300;
     line-height: 22px;
     padding: 10px;
-    
 }
 
 .cards {
@@ -193,7 +194,7 @@ p{
     flex-wrap: wrap;
     justify-content: center; /* Center align cards horizontally */
     align-items: center; /* Center align cards vertically */
-    margin: 50px 0;
+    /* margin: 50px 0; */
 }
 
 .card {
@@ -266,6 +267,17 @@ p{
         width: 100%;
     }
 }
+
+.filter-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 .filter-btn {
     background-color: #f44336;
     color: #fff;
@@ -273,34 +285,35 @@ p{
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    margin: 20px;
-    float: left;
+    margin-bottom: 15; /* Add margin to the bottom to separate it from the filter box */
 }
 
-
-
+/* Update the filter box CSS */
 .filter-box {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: none; /* Hide filter box by default */
+    position: absolute;
+    top: 100%; /* Position below the filter button */
+    left: 0;
     width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    max-width: 300px; /* Set a max-width for the filter box */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 20px;
+    border-radius: 5px;
+}
 
 .filter-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .filter-header span {
     font-size: 1.2em;
+    font-weight: bold;
 }
 
 .filter-header .fa-times {
@@ -310,16 +323,11 @@ p{
 .filter-content {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-}
-
-.filter-items {
-    margin-bottom: 20px;
+    gap: 10px; /* Add gap between filter items */
 }
 
 .filter-items label {
     display: block;
-    margin-bottom: 10px;
     font-size: 1em;
     cursor: pointer;
 }
@@ -328,6 +336,7 @@ p{
     display: flex;
     justify-content: space-between;
     width: 100%;
+    margin-top: 20px;
 }
 
 .filter-actions button {
@@ -338,4 +347,3 @@ p{
     border-radius: 5px;
     cursor: pointer;
 }
-

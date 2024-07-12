@@ -50,8 +50,8 @@ if (isset($_SESSION['login_user_id'])) {
                         <?php if($isAdmin): ?>
                         <li><a href="login222/dashboard.php">Admin Panel</a></li>
                         <?php endif; ?>
-                        <li><a href="edit.php">Edit</a></li>
-                        <li><a href="upload.php">Upload</a></li>
+                        <li><a href="edit.php">Domain</a></li>
+                        <li><a href="upload.php">Project</a></li>
                         <li><a href="logout.php">Sign out</a></li>
                     <?php else: ?>
                         <li><a href="Login222/index.php">Log in</a></li>
