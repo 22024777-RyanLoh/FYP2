@@ -191,11 +191,11 @@ if (!isset($_SESSION['click_counts'])) {
         var navLinks = document.getElementById("navLinks");
 
         function showmenu() {
-            navLinks.style.right = "0";
+            navLinks.style.top = "0";
         }
 
         function hidemenu() {
-            navLinks.style.right = "-200px";
+            navLinks.style.top = "-100%";
         }
         
         function toggleFilterBox() {
