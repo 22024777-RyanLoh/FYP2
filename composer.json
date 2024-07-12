@@ -1,0 +1,14 @@
+{
+    "name": "ryanloh/learningtest",
+    "description": "A PHP project to extract text from PDFs and store it in a MySQL database.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "ryanloh"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "smalot/pdfparser": "^2.10"
+    }
+}

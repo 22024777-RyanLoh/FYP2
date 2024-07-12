@@ -1,0 +1,291 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.header {
+    min-height: 10vh;
+    width: 100%;
+    background-color: #FF4F00;
+    position: relative;
+}
+
+.bottom {
+    min-height: 10vh;
+    width: 100%;
+    background-color: rgb(241, 70, 2);
+    background-position: center;
+    position: relative;
+}
+
+nav {
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav img {
+    width: 150px;
+}
+
+.nav-links {
+    flex: 1;
+    text-align: right;
+}
+
+.nav-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links ul li {
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.nav-links ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav-links ul li::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.nav-links ul li:hover::after {
+    width: 100%;
+}
+
+nav2 {
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav2-links {
+    flex: 1;
+    text-align: left;
+}
+
+.nav2-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav2-links ul li {
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.nav2-links ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav2-links ul li::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.nav2-links ul li:hover::after {
+    width: 100%;
+}
+
+.text-box {
+    width: 90%;
+    color: #fff;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+
+.text-box h1 {
+    font-size: 62px;
+}
+
+.text-box p {
+    margin: 10px 0 40px;
+    font-size: 14px;
+    color: #fff;
+}
+
+nav .fa {
+    display: none;
+}
+
+@media(max-width: 700px) {
+    .text-box h1 {
+        font-size: 20px;
+    }
+    .nav-links ul li {
+        display: block;
+    }
+    .nav-links {
+        position: absolute;
+        background: #f44336;
+        height: 100vh;
+        width: 200px;
+        top: 0;
+        right: -200px;
+        text-align: left;
+        z-index: 2;
+        transition: 1s;
+    }
+    nav .fa {
+        display: block;
+        color: #fff;
+        margin: 10px;
+        font-size: 10px;
+        cursor: pointer;
+    }
+    .nav-links ul {
+        padding: 30px;
+    }
+}
+
+.container, .container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15vh; /* This makes the container take up the full height of the viewport */
+}
+
+.form-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10%;
+    margin-bottom: 1%;
+}
+
+.category {
+    display: flex;
+    justify-content: center;
+    margin: 10px 10; /* Adjust the margin to your liking */
+}
+
+.category select {
+    width: 250px; /* Adjust this value as needed */
+    margin: 0 10px; /* Adjust the margin to your liking */
+}
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align items at the bottom */
+    flex-grow: 1; /* Allow the container to grow */
+}
+
+.table-container h2 {
+    margin-top: 30px; /* Adjust the margin as needed */
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Adjust the top margin as needed */
+    margin-bottom: 20px;
+}
+
+.pagination ul {
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    display: inline-block;
+    margin-right: 5px; /* Adjust spacing between pagination items */
+}
+
+.pagination li a {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+}
+
+.pagination li a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    padding: 8px; /* Add padding for table headers */
+    text-align: left;
+    border: none; /* Remove border */
+    background-color: #f0f0f0; /* Add background color */
+}
+
+.table td {
+    max-width: 450px;
+    padding: 8px; /* Add padding for table cells */
+    vertical-align: middle;
+    text-align: left; /* Center align the content */
+    border: 1px solid #ddd; /* Add border */
+}
+
+/* Adjust button styles if needed */
+.table .btn {
+    padding: 5px 10px; /* Adjust padding to fit the buttons nicely */
+    font-size: 14px; /* Adjust font size for better fit */
+}
+
+.btn-upload {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-upload:hover {
+    background-color: darkblue;
+}
+
+/* New styles for form control border */
+.form-control {
+    border: 2px solid #007bff; /* Increase border width and set color */
+    border-radius: 5px; /* Adjust border radius if needed */
+    padding: 10px; /* Add padding */
+}
+
+.form-control:focus {
+    border-color: #0056b3; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add box shadow on focus */
+    outline: none; /* Remove default outline */
+}
+
+
