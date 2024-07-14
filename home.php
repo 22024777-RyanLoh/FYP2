@@ -1,5 +1,6 @@
 <?php
 session_start();
+require 'vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -118,9 +119,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 
 // Forgot Password handling
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
-    require 'vendor/autoload.php';
-
-
     $email_reg = mysqli_real_escape_string($dbconfig, $_POST['reset_email']);
     $details = mysqli_query($dbconfig, "SELECT user_fullname, email FROM user WHERE email='$email_reg'");
     if (mysqli_num_rows($details) > 0) {
@@ -297,7 +295,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
                         <form class="login-container validate-form" name="login-form" action="home.php" method="POST">
                             <div class="text-center mb-4">
                                 <a href="home.php">
-                                    <img src="Domain_picture\rp-logo.png" alt="Republic Polytechnic" width="175" height="57">
+                                    <img src="Domain_picture/rp-logo.png" alt="Republic Polytechnic" width="175" height="57">
                                 </a>
                             </div>
                             <div class="form-group">
@@ -330,34 +328,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
 
     <!-- FORGOT PASSWORD MODAL -->
     <div id="forgotPasswordModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Forgot Password</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Account Recovery</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <a href="home.php"><img src="Domain_picture/rp-logo.png" alt="RP LOGO" width="175" height="57"></a>
+                    <p style="color: #000000;">Provide the email address associated with your account to recover your password.</p>
                 </div>
-                <div class="modal-body">
-                    <div class="forgot-password">
-                        <form class="forgot-password-container validate-form" name="forgot-password-form" action="home.php" method="POST">
-                            <div class="form-group">
-                                <label for="reset_email">Email address</label>
-                                <input type="email" name="reset_email" class="form-control" id="reset_email" autocomplete="off" value="<?php echo isset($_POST['reset_email']) ? $_POST['reset_email'] : ''; ?>" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" title="Invalid email address. You are missing an '@' and '.' in your email.">
-                            </div>
-                            <button type="submit" name="reset_password" class="btn btn-primary btn-block">Reset Password</button>
-                            <?php if (isset($message)) {
-                                echo "<div class='alert alert-danger mt-3'>$message</div>";
-                            } ?>
-                            <?php if (isset($message_success)) {
-                                echo "<div class='alert alert-success mt-3'>$message_success</div>";
-                            } ?>
-                        </form>
-                    </div>
+                <div class="forgot-password">
+                    <form class="forgot-password-container validate-form" name="forgot-password-form" action="home.php" method="POST">
+                        <div class="form-group">
+                            <label for="reset_email">Email address <span style="color: red;">*</span></label>
+                            <input type="email" name="reset_email" class="form-control" id="reset_email" autocomplete="off" value="<?php echo isset($_POST['reset_email']) ? $_POST['reset_email'] : ''; ?>" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" title="Invalid email address. You are missing an '@' and '.' in your email.">
+                        </div>
+                        <button type="submit" name="reset_password" class="btn btn-primary btn-block">Reset Password</button>
+                        <?php if (isset($message)) {
+                            echo "<div class='alert alert-danger mt-3'>$message</div>";
+                        } ?>
+                        <?php if (isset($message_success)) {
+                            echo "<div class='alert alert-success mt-3'>$message_success</div>";
+                        } ?>
+                        <div class="text-center mt-3">
+                            <a href="#" onclick="closeForgotPasswordAndShowLogin()">Log in</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<script>
+    function closeForgotPasswordAndShowLogin() {
+        $('#forgotPasswordModal').modal('hide');
+        $('#loginModal').modal('show');
+    }
+</script>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -368,22 +381,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
             if (localStorage.getItem('loginError') === 'true') {
                 $('#loginModal').modal('show');
                 localStorage.removeItem('loginError');
-                var navLinks = document.getElementById("navLinks");
-
-        function showmenu() {
-            navLinks.style.top = "0";
-        }
-
-        function hidemenu() {
-            navLinks.style.top = "-100%";
-        }
-        
-        function toggleFilterBox() {
-            var filterBox = document.getElementById("filterBox");
-            if (filterBox.style.display === "block") {
-                filterBox.style.display = "none";
-            } else {
-                filterBox.style.display = "block";
             }
 
             // Check for forgot password errors
@@ -490,13 +487,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
 
             window.showForgotPasswordModal = function() {
                 $('#forgotPasswordModal').modal('show');
+                $('#loginModal').modal('hide');
             }
 
             window.hideForgotPasswordModal = function() {
                 $('#forgotPasswordModal').modal('hide');
             }
-        }
-        }});
+        });
     </script>
 
     <style>
@@ -518,6 +515,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
 
         .alert {
             margin-top: 1rem;
+        }
+
+        .forgot-password-container .text-center img {
+            margin-bottom: 1rem;
         }
     </style>
 </body>

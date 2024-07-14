@@ -9,6 +9,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "smalot/pdfparser": "^2.10"
+        "smalot/pdfparser": "^2.10",
+        "phpmailer/phpmailer": "^6.9"
     }
 }

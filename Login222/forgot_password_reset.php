@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-12">
               <div class="text-center">
                 <a href="../home.php">
-                  <img src="Uploads/logo1.png" alt="Republic Polytechnic" width="175" height="57">
+                  <img src="../Domain_picture/rp-logo.png" alt="Republic Polytechnic" width="175" height="57">
                 </a>
               </div>
             </div>
@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-12">
               <hr class="mt-5 mb-4 border-secondary-subtle">
               <div class="d-flex gap-4 justify-content-center">
-                <a href="index.php" class="link-secondary text-decoration-none">Back to Login</a><br><br>
+                <a href="../home.php" class="link-secondary text-decoration-none">Back to Login</a><br><br>
               </div>
             </div>
           </div>
