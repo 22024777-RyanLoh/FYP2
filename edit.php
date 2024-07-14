@@ -51,27 +51,145 @@ $total_pages = ceil($total_records / $limit);
 </head>
 <body>
 
+<style>
+
+.header {
+    min-height: 15vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(Domain_picture/homepage.png);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+.bottom {
+    min-height: 10vh;
+    width: 100%;
+    background-color: rgb(241, 70, 2);
+    background-position: center;
+    position: relative;
+}
+
+nav {
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav img {
+    width: 150px;
+}
+
+.nav-links {
+    flex: 1;
+    text-align: right;
+}
+
+.nav-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links ul li {
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.nav-links ul li a,
+.welcome-message {
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav-links ul li::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.nav-links ul li:hover::after {
+    width: 100%;
+}
+
+nav2 {
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    margin-top: 130px;
+    align-items: center;
+}
+
+.nav2-links {
+    flex: 1;
+    text-align: left;
+}
+
+.nav2-links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav2-links ul li {
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.nav2-links ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.nav2-links ul li::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.nav2-links ul li:hover::after {
+    width: 100%;
+}
+
+</style>
+
 <section class="header">
-        <nav>
-            <a href="home.php"><img src="Domain_picture/logo1.png" alt="Logo"></a>
-            <div class="nav-links" id="navLinks">
-                <i class="fas fa-times" onclick="hidemenu()"></i>
-                <ul>
-                    <?php if(isset($_SESSION['login_user'])): ?>
-                        <li><span class="welcome-message" style="color: #ffffff;">Welcome, <?php echo $_SESSION['login_user']; ?></span></li>
-                        <?php if($isAdmin): ?>
-                            <li><a href="login222/dashboard.php">Admin Panel</a></li>
-                        <?php endif; ?>
-                        <li><a href="edit.php">Domain</a></li>
-                        <li><a href="upload.php">Project</a></li>
-                        <li><a href="logout.php">Sign out</a></li>
-                    <?php else: ?>
-                        <li><a href="Login222/index.php">Log in</a></li>
+    <nav>
+        <a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a>
+        <div class="nav-links" id="navLinks">
+            <i class="fas fa-times" onclick="hidemenu()"></i>
+            <ul>
+                <?php if(isset($_SESSION['login_user'])): ?>
+                    <li><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></li>
+                    <?php if($isAdmin): ?>
+                        <li><a href="Login222/users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
+                                <span style="padding-left:6px">My Profile</span>
+                        </a></li>
+                        <li><a href="login222/dashboard.php">Admin Panel</a></li>
                     <?php endif; ?>
-                </ul>
-            </div>
-            <i class="fas fa-bars" onclick="showmenu()"></i>
-        </nav>
+                    <li><a href="edit.php">Domain</a></li>
+                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="logout.php">Sign out</a></li>
+                <?php else: ?>
+                    <li><a href="#" onclick="showLoginModal()">Log in</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+        <i class="fas fa-bars" onclick="showmenu()"></i>
+    </nav>
 </section>
 
 <div class="container">

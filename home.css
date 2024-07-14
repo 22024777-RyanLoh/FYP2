@@ -27,26 +27,35 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
-
-nav img {
-    width: 150px;
-}
-
-.nav-links {
-    flex: 1;
-    text-align: right;
-}
-
 .nav-links ul {
+    display: flex;
+    align-items: center;
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .nav-links ul li {
-    display: inline-block;
-    padding: 8px 12px;
+    padding: 0 12px;
     position: relative;
+}
+
+.nav-links ul li:first-child {
+    margin-right: auto; /* Push the logo to the left */
+}
+
+.nav-links ul li:first-child a {
+    padding: 0; /* Remove padding for the logo */
+}
+
+.nav-links ul li:first-child a img {
+    width: 150px;
+}
+
+.nav-links ul li:first-child::after {
+    content: none; /* Remove the orange line under the logo */
 }
 
 .nav-links ul li a,
@@ -54,6 +63,25 @@ nav img {
     color: #fff;
     text-decoration: none;
     font-size: 15px;
+    white-space: nowrap; /* Ensure the text does not wrap */
+}
+
+.nav-links ul li:not(:first-child) {
+    margin-left: 0; /* Reset margin to prevent extra spacing */
+}
+
+.nav-links ul li:not(:first-child)::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.nav-links ul li:not(:first-child):hover::after {
+    width: 100%;
 }
 
 .nav-links ul li::after {

@@ -210,8 +210,6 @@ function validatePassword() {
 }
 </script>
 
-
-
     <style>
         .glyphicon-ok {
             color: #00A41E;
@@ -381,7 +379,7 @@ if ($do == "Manage") {
                 Add New User
             </div>
             <div class="card-body">
-                <form method="POST" class="menu_form" action="users.php?do=Insert" onsubmit="return validatePassword();">
+                <form method="POST" class="menu_form" action="users.php?do=Insert" onsubmit="return validateForm();">
                     <div class="panel-X">
                         <div class="panel-header-X">
                             <div class="main-title">Addition of New Staff/Admin</div>
@@ -404,10 +402,10 @@ if ($do == "Manage") {
                                 <input type="text" class="form-control" placeholder="Full Name" name="full_name" required>
                             </div>
 
-                            <!-- User Email INPUT -->
+                            <!-- User Email INPUT with Validation -->
                             <div class="form-group">
                                 <label for="user_email">User E-mail</label>
-                                <input type="email" class="form-control" placeholder="User Email" name="user_email" required>
+                                <input type="email" class="form-control" placeholder="User Email" name="user_email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                             </div>
 
                             <!-- User Role INPUT -->
@@ -550,10 +548,10 @@ if ($do == "Manage") {
                                         <input type="text" class="form-control" value="<?php echo $user['user_fullname'] ?>" placeholder="Full Name" name="full_name" required>
                                     </div>
 
-                                    <!-- User Email INPUT -->
+                                    <!-- User Email INPUT with Validation -->
                                     <div class="form-group">
                                         <label for="user_email">User E-mail</label>
-                                        <input type="email" class="form-control" value="<?php echo $user['email'] ?>" placeholder="User Email" name="user_email" required>
+                                        <input type="email" class="form-control" value="<?php echo $user['email'] ?>" placeholder="User Email" name="user_email" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" title="Invalid email address. You are missing an '@' and '.' in your email.">
                                     </div>
 
                                     <!-- User Role INPUT -->
@@ -601,6 +599,30 @@ if ($do == "Manage") {
                                                 <li id="num" class="glyphicon glyphicon-remove"> One Number</li>
                                                 <li id="pwmatch" class="glyphicon glyphicon-remove"> Passwords Match</li>
                                             </ul>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="form-group">
+                                            <label for="user_password">Change Password (Disabled)</label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" placeholder="Password" id="user_password" disabled>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-eye toggle-password" toggle="#user_password"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="re_user_password">Re-Enter Password (Disabled)</label>
+                                            <div class="input-group">
+                                                <input type="password" class="form-control" placeholder="Re-Enter Password" id="re_user_password" disabled>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-eye toggle-password" toggle="#re_user_password"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     <?php endif; ?>
 
@@ -678,7 +700,7 @@ if ($do == "Manage") {
                                 // Content
                                 $mail->isHTML(true); // Set email format to HTML
                                 $mail->Subject = 'Password Changed Successfully';
-                                $mail->Body = "Hi, $user_fullname <br><br> We wanted to let you know that your password was reset. If you did not initiate this change, please contact Republic Polytechnic's support immediately. <br><br>
+                                $mail->Body = "Hi, $user_fullname <br><br> Your password has been successfully reset. If you did not initiate this change, please contact Republic Polytechnic's support immediately. <br><br>
                                 Please do not reply to this email with your password. We will never ask for your password, and we strongly discourage you from sharing it with anyone.";
                 
                                 $mail->send();

@@ -1,0 +1,14 @@
+/* Additional custom styles for the modal */
+
+
+.modal-body .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.invalid-feedback {
+    display: block;
+}
+
+.alert {
+    margin-top: 1rem;
+}

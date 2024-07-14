@@ -101,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-12">
               <hr class="mt-5 mb-4 border-secondary-subtle">
               <div class="d-flex gap-4 justify-content-center">
-                <a href="index.php" class="link-secondary text-decoration-none">Log In<br><br></a><br>
+                <a href="../home.php" class="link-secondary text-decoration-none">Log In<br><br></a><br>
                 <!--<a href="registration.php" class="link-secondary text-decoration-none">Register</a> <br><br>
               </div>
             </div>
