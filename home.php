@@ -368,6 +368,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
             if (localStorage.getItem('loginError') === 'true') {
                 $('#loginModal').modal('show');
                 localStorage.removeItem('loginError');
+                var navLinks = document.getElementById("navLinks");
+
+        function showmenu() {
+            navLinks.style.top = "0";
+        }
+
+        function hidemenu() {
+            navLinks.style.top = "-100%";
+        }
+        
+        function toggleFilterBox() {
+            var filterBox = document.getElementById("filterBox");
+            if (filterBox.style.display === "block") {
+                filterBox.style.display = "none";
+            } else {
+                filterBox.style.display = "block";
             }
 
             // Check for forgot password errors
@@ -479,7 +495,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
             window.hideForgotPasswordModal = function() {
                 $('#forgotPasswordModal').modal('hide');
             }
-        });
+        }
+        }});
     </script>
 
     <style>
