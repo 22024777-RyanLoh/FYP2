@@ -1,6 +1,23 @@
 <?php
 session_start();
-$isAdmin = isset($_SESSION["admin"]) && $_SESSION["admin"] === true;
+
+// Database Connection
+$conn = mysqli_connect("localhost", "root", "", "fyp_test");
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Check if the user is an admin
+$isAdmin = false;
+if (isset($_SESSION['login_user_id'])) {
+    $userId = $_SESSION['login_user_id'];
+    $sql = "SELECT user_role FROM user WHERE user_id = '$userId'";
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
+        $row = mysqli_fetch_assoc($result); 
+        $isAdmin = ($row['user_role'] === 'Admin');
+    }
+}
 ?>
 
 <!doctype html>
@@ -8,8 +25,7 @@ $isAdmin = isset($_SESSION["admin"]) && $_SESSION["admin"] === true;
     <head>
     <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Upload Poster</title>
-        <link rel="stylesheet" href="edit.css" />
+        <link rel="stylesheet" href="project.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -17,25 +33,7 @@ $isAdmin = isset($_SESSION["admin"]) && $_SESSION["admin"] === true;
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" href="test2.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     </head>
 <body>
-    <section class = "header">
-        <nav>
-            <a href="home.php"><img src="Domain_picture/logo1.png" alt="Logo"></a>
-            <div class="nav-links" id="navLinks">
-                <i class="fas fa-times" onclick="hidemenu()"></i>
-                <ul>
-                <li><a href="home.php">Home</a></li>
-                    <?php if ($isAdmin): ?>
-                        <li><a href="edit.php">Domain </a></li>
-                        <li><a href="upload.php">Project </a></li>
-                        <li><a href="logout.php">Sign out</a></li>
-                    <?php else: ?>
-                        <li><a href="login.php">Log in</a></li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-            <i class="fas fa-bars" onclick="showmenu()" ></i>
-        </nav>
-    </section>
+
 
 <?php
 // Connect to MySQL database (replace with your credentials)

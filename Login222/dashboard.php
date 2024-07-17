@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="edit.css">
+</head>
+<body>
+    
+</body>
+</html>
+
 <?php
 // Start session
 session_start();
@@ -27,7 +39,6 @@ WILL ADD THINGS LATER.
 <!-- TOP 4 CARDS -->
 <!-- Add your card code here -->
 <?php
-    include 'Includes/templates/footer.php';
 } else {
     header("Location: ../home.php");
     exit();

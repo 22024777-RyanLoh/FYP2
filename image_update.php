@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_update->execute();
 
         if ($stmt_update->affected_rows > 0) {
-            echo "Domain has been updated successfully.";
+            echo "Domain has been Updated Successfully.";
         } else {
             echo "Please make a change to the description, or upload a new image to save changes.";
         }

@@ -35,33 +35,34 @@ function fetchDomainname($conn) {
     return $domains;
 }
 
-// Fetch domain names from the database
-$domains = fetchDomainname($conn);
-
 // Function to fetch domain information
-function fetchDomainInfo($conn, $domainName) {
-    $sql = "SELECT domain_image, domain_description FROM domains WHERE domain_name = '$domainName' LIMIT 1";
+function fetchDomainInfo($conn, $domainId) {
+    $sql = "SELECT domain_name, domain_description FROM domains WHERE domain_id = '$domainId' LIMIT 1";
     $result = mysqli_query($conn, $sql);
     $domainInfo = array();
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
-        $domainInfo['image'] = "Domain_picture/" . $row["domain_image"];
+        $domainInfo['name'] = $row["domain_name"];
         $domainInfo['description'] = $row["domain_description"];
     } else {
-        $domainInfo['image'] = "";
-        $domainInfo['description'] = "No description available for $domainName.";
+        $domainInfo['name'] = "No name available for domain with ID: $domainId.";
+        $domainInfo['description'] = "No description available for domain with ID: $domainId.";
     }
     return $domainInfo;
 }
 
-// Fetch domain information for each category
+// Fetch domain information based on id
+$domains = array();
 $backgroundImages = array();
 $descriptions = array();
 
-foreach ($domains as $key => $domain) {
-    $domainInfo = fetchDomainInfo($conn, $domain);
-    $backgroundImages[$key] = $domainInfo['image'];
-    $descriptions[$key] = $domainInfo['description'];
+$sql = "SELECT domain_id, domain_name, domain_image, domain_description FROM domains";
+$result = mysqli_query($conn, $sql);
+while ($row = mysqli_fetch_assoc($result)) {
+    $domainInfo = fetchDomainInfo($conn, $row['domain_id']);
+    $domains[$row['domain_id']] = $row['domain_name'];
+    $backgroundImages[$row['domain_id']] = "Domain_picture/" . $row['domain_image'];
+    $descriptions[$row['domain_id']] = $row['domain_description'];
 }
 
 mysqli_close($conn);
@@ -172,10 +173,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
     <title>School Of Infocomm</title>
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <style>
+    #backToTopBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        border: none;
+        outline: none;
+        background-color: #555;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 18px;
+    }
+
+    #backToTopBtn:hover {
+        background-color: #000;
+    }
+</style>
+
+
 </head>
 <body>
     <!-- Rest of the body content -->
@@ -194,7 +222,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
                     <li><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></li>
                     <?php if($isAdmin): ?>
                         <li><a href="Login222/users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
-                                <span style="padding-left:6px">My Profile</span>
+                                <span>My Profile</span>
                         </a></li>
                         <li><a href="login222/dashboard.php">Admin Panel</a></li>
                     <?php endif; ?>
@@ -220,7 +248,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
 
 
     <section class="filter">
-    <?php if ($isAdmin): ?>
         <div class="filter-container">
             <button class="filter-btn" onclick="toggleFilterBox()">Filter</button>
             <div class="filter-box" id="filterBox">
@@ -247,38 +274,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
                 </div>
             </div>
         </div>
-        <?php endif; ?>
     </section>
 
     <section class="cards">
         
-        <?php foreach ($domains as $key => $domain) : ?>
+    <?php foreach ($domains as $id => $domain) : ?>
             
-            <div class="card card<?php echo $key + 1; ?>" style="background-image: linear-gradient(rgba(4,9,30,0.5), rgba(4,9,30,0.5)),url('<?php echo isset($backgroundImages[$key]) ? $backgroundImages[$key] : ''; ?>');">
-                <div class="card-text">
+        <div class="card card<?php echo $id; ?>" style="background-image: linear-gradient(rgba(4,9,30,0.5), rgba(4,9,30,0.5)),url('<?php echo isset($backgroundImages[$id]) ? $backgroundImages[$id] : ''; ?>');">
+            <div class="card-text">
                     <h2><?php echo $domain; ?></h2>
-                    <p><?php echo isset($descriptions[$key]) ? $descriptions[$key] : ''; ?></p>
+                    <p><?php echo isset($descriptions[$id]) ? $descriptions[$id] : ''; ?></p>
                     <!-- Display click count dynamically -->
                     <?php if ($isAdmin): ?>
                         <p id="clickCount_<?php echo $domain; ?>">Click Count: <?php echo isset($clickCounts[$domain]) ? $clickCounts[$domain] : 0; ?></p>
                     <?php endif; ?>
-                    <a href="domain_page.php?domain=<?php echo urlencode($domain); ?>" class="learn-more-btn" onclick="updateClickCount('<?php echo $domain; ?>')">Learn More</a>
+                    <a href="domain_page.php?domain_id=<?php echo urlencode($id); ?>" class="learn-more-btn">Learn More</a>
                 </div>
             </div>
         <?php endforeach; ?>
         
     </section>
 
-    <section class="bottom">
-        <nav2>
-            <a href="home.php"></a>
-            <div class="nav2-links" id="navLinks">
-                <ul>
-                    <li><a href="home.php">HOME</a></li>
-                </ul>
-            </div>
-        </nav2>
-    </section>
 
     <!-- LOGIN MODAL -->
     <div id="loginModal" class="modal fade" tabindex="-1" role="dialog">
@@ -355,7 +371,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
                             echo "<div class='alert alert-success mt-3'>$message_success</div>";
                         } ?>
                         <div class="text-center mt-3">
-                            <a href="#" onclick="closeForgotPasswordAndShowLogin()">Log in</a>
+                            <a href="#" onclick="closeForgotPasswordAndShowLogin()">Back to Log in</a>
                         </div>
                     </form>
                 </div>
@@ -521,5 +537,156 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
             margin-bottom: 1rem;
         }
     </style>
+    <!-- Back to Top Button -->
+<button id="backToTopBtn" title="Back to Top">
+    <i class="fa fa-arrow-up"></i>
+</button>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Show or hide the button based on scroll position
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 100) {
+                $('#backToTopBtn').fadeIn();
+            } else {
+                $('#backToTopBtn').fadeOut();
+            }
+        });
+
+        // Smooth scroll to top
+        $('#backToTopBtn').click(function() {
+            $('html, body').animate({scrollTop: 0}, 400);
+            return false;
+        });
+
+        // Existing functionality (if any)
+    });
+</script>
+
+
+</body>
+<body>
+
+<!-- <section class="bottom">
+     <nav2>
+        <div class="nav2-links" id="navLinks">
+            <div class="container">
+            <ul>
+                <li><a href="home.php">Home</a></li>
+                <li class="separator">|</li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            </div>
+            <p style="padding: 0;">9 Woodlands Avenue 9, Singapore 738964 <br> Copyright © Republic Polytechnic. All Rights Reserved.</p>
+            
+        </div>
+    </nav2>
+</section> -->
+
+<!-- <section class="footer-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="footerlinks">
+                    <h3 class="footer-title">
+                        <a href="www.rp.edu.sg/about-us">About Us</a>
+                    </h3>
+                    <nav class="footer-link">
+                        <ul>
+                            <li>
+                                <a href="www.rp.edu.sg/about-us/who-we-are">Who We Are</a>
+                            </li>
+                            <li>
+                                <a href="www.rp.edu.sg/about-us/our-people">Our People</a>
+                            </li>
+                            <li>
+                                <a href="www.rp.edu.sg/about-us/media">Media</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="connect-section">
+                    <h3 class="footer-title">Connect With Us</h3>
+                    <nav class="footer-link">
+                        <ul>
+                             instagram 
+                             <a href="http://www.instagram.com/republicpoly" target="_blank" class="footer-socialicon" aria-label="Instagram" data-sf-ec-immutable>
+                                <em class="fa fa-instagram">
+                                    ::before
+                                </em>
+                             </a>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+ -->
+
+
+
+
+
+
+
+
+
+
+<div class="content">
+    
+    <footer class="footer">
+        <div class="footer-content container">
+            <div class="col-md-3">
+                <h3><a href="https://www.rp.edu.sg/about-us" & target=_blank>About Us</a></h3>
+                <ul>
+                    <li><a href="https://www.rp.edu.sg/about-us/who-we-are" & target=_blank >Who We Are</a></li>
+                    <li><a href="https://www.rp.edu.sg/about-us/our-people" & target=_blank>Our People</a></li>
+                    <li><a href="https://www.rp.edu.sg/about-us/media" & target=_blank>Media</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section social-media">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li><a href="http://www.facebook.com/republicpolytechnic" target="_blank" class="footer-socialicon" aria-label="Facebook" data-sf-ec-immutable=""><em class="fa fa-facebook"></em></a></li>
+                    <li><a href="https://sg.linkedin.com/school/republic-polytechnic/" target="_blank" class="footer-socialicon" aria-label="LinkedIn" data-sf-ec-immutable=""><em class="fa fa-linkedin"></em></a></li>
+                    <li><a href="http://www.youtube.com/channelRP" target="_blank" class="footer-socialicon" aria-label="YouTube" data-sf-ec-immutable=""><em class="fa fa-youtube"></em></a></li>
+                    <li><a href="http://www.instagram.com/republicpoly" target="_blank" class="footer-socialicon" aria-label="Instagram" data-sf-ec-immutable=""><em class="fa fa-instagram"></em></a></li>
+                    <li><a href="http://twitter.com/republicpoly" target="_blank" class="footer-socialicon" aria-label="Twitter" data-sf-ec-immutable=""><svg style="margin-bottom:5px;width:22px;height:22px; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" xml:space="preserve" enable-background="new 0 0 24 24"><path d="M14.095 10.316 22.286 1h-1.94L13.23 9.088 7.551 1H1l8.59 12.231L1 23h1.94l7.51-8.543L16.45 23H23l-8.905-12.684zm-2.658 3.022-.872-1.218L3.64 2.432h2.98l5.59 7.821.869 1.219 7.265 10.166h-2.982l-5.926-8.3z" fill="#ffffff" class="fill-000000"></path></svg></a></li>
+                    <li><a href="https://www.tiktok.com/@republicpoly" target="_blank" aria-label="TikTok" data-sf-ec-immutable="">
+                    <svg style="margin-bottom:-5px; width: 33px; height: 33px; vertical-align: middle;" viewBox="10 8 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="footer-socialicon"><title>Tiktok</title>
+                    <g id="Icon/Social/tiktok-black" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><path d="M38.0766847,15.8542954 C36.0693906,15.7935177 34.2504839,14.8341149 32.8791434,13.5466056 C32.1316475,12.8317108 31.540171,11.9694126 31.1415066,11.0151329 C30.7426093,10.0603874 30.5453728,9.03391952 30.5619062,8 L24.9731521,8 L24.9731521,28.8295196 C24.9731521,32.3434487 22.8773693,34.4182737 20.2765028,34.4182737 C19.6505623,34.4320127 19.0283477,34.3209362 18.4461858,34.0908659 C17.8640239,33.8612612 17.3337909,33.5175528 16.8862248,33.0797671 C16.4386588,32.6422142 16.0833071,32.1196657 15.8404292,31.5426268 C15.5977841,30.9658208 15.4727358,30.3459348 15.4727358,29.7202272 C15.4727358,29.0940539 15.5977841,28.4746337 15.8404292,27.8978277 C16.0833071,27.3207888 16.4386588,26.7980074 16.8862248,26.3604545 C17.3337909,25.9229017 17.8640239,25.5791933 18.4461858,25.3491229 C19.0283477,25.1192854 19.6505623,25.0084418 20.2765028,25.0219479 C20.7939283,25.0263724 21.3069293,25.1167239 21.794781,25.2902081 L21.794781,19.5985278 C21.2957518,19.4900128 20.7869423,19.436221 20.2765028,19.4380839 C18.2431278,19.4392483 16.2560928,20.0426009 14.5659604,21.1729264 C12.875828,22.303019 11.5587449,23.9090873 10.7814424,25.7878401 C10.003907,27.666593 9.80084889,29.7339663 10.1981162,31.7275214 C10.5953834,33.7217752 11.5748126,35.5530237 13.0129853,36.9904978 C14.4509252,38.4277391 16.2828722,39.4064696 18.277126,39.8028054 C20.2711469,40.1991413 22.3382874,39.9951517 24.2163416,39.2169177 C26.0948616,38.4384508 27.7002312,37.1209021 28.8296253,35.4300711 C29.9592522,33.7397058 30.5619062,31.7522051 30.5619062,29.7188301 L30.5619062,18.8324027 C32.7275484,20.3418321 35.3149087,21.0404263 38.0766847,21.0867664 L38.0766847,15.8542954 Z" id="Fill-1" fill="#FFFFFF"></path></g>
+                    </svg>
+                    </a></li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="bottom">
+        <nav2>
+        <div class="nav2-links" id="navLinks">
+            <div class="container">
+            <ul>
+                <li><a href="home.php">Home</a></li>
+                <li class="separator">|</li>
+                <li><a href="https://www.rp.edu.sg/service-excellence/contact-us" & target=_blank>Contact</a></li>
+            </ul>
+            </div>
+            <p style="padding: 0;">9 Woodlands Avenue 9, Singapore 738964 <br> Copyright © Republic Polytechnic. All Rights Reserved.</p>
+            
+        </div>
+    </nav2>
+    </footer>
+
+</div>
+
 </body>
 </html>

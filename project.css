@@ -346,7 +346,6 @@ nav .fa {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 10%;
     margin-bottom: 1%;
 }
 
@@ -362,10 +361,10 @@ nav .fa {
 }
 
 .table-container {
+    display: flex;
     justify-content: center;
     align-items: flex-end; /* Align items at the bottom */
-    margin: 100px;
-    margin-bottom: auto;
+    flex-grow: 1; /* Allow the container to grow */
 }
 
 .table-container h2 {
@@ -463,3 +462,5 @@ p {
     font-weight: 300;
     line-height: 22px;
 }
+
+

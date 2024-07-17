@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->Port = 587; // TCP port to connect to
 
             // Recipients
-            $mail->setFrom('naolao11111@gmail.com', 'fyp');
+            $mail->setFrom('naolao11111@gmail.com', 'RP Requesting change of password');
             $mail->addAddress($email); // Add a recipient
 
             // Content
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>Reset Password</title>
     <style>
         .rounded-box {
@@ -94,13 +94,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .password-criteria ul li .glyphicon {
             margin-right: 8px;
         }
+        .custom-background {
+            background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url('../Domain_picture/frontRP.jpg');
+            background-size: 100% 100%; /* Stretch the image to fit the entire container */
+            background-repeat: no-repeat; /* Ensure the image doesn't repeat */
+            background-position: center; /* Center the image */
+        }
+        .form-container {
+            margin: auto; /* Center the form */
+            padding: 20px; /* Add some padding for better spacing */
+        }
     </style>
 </head>
 <body>
-<div class="bg-light py-3 py-md-5">
+<div class="custom-background py-3 py-md-5">
   <div class="container">
     <div class="row justify-content-md-center">
-      <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+      <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6 form-container">
         <div class="bg-white p-4 p-md-5 rounded shadow-sm">
           <div class="row gy-3 mb-5">
             <div class="col-12">
@@ -121,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="input-group">
                   <input type="password" class="form-control form-control-lg" name="password1" id="password1" placeholder="New Password" autocomplete="off" required>
                   <span class="input-group-text">
-                    <i class="bi bi-eye-slash toggle-password" toggle="#password1"></i>
+                    <i class="fa fa-eye toggle-password" toggle="#password1"></i>
                   </span>
                 </div>
                 <small id="passwordHelpBlock" class="form-text text-muted">
@@ -133,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="input-group">
                   <input type="password" class="form-control form-control-lg" name="password2" id="password2" placeholder="Repeat Password" autocomplete="off" required>
                   <span class="input-group-text">
-                    <i class="bi bi-eye-slash toggle-password" toggle="#password2"></i>
+                    <i class="fa fa-eye toggle-password" toggle="#password2"></i>
                   </span>
                 </div>
               </div>
@@ -239,12 +249,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         const input = document.querySelector(item.getAttribute('toggle'));
         if (input.type === 'password') {
             input.type = 'text';
-            item.classList.remove('bi-eye-slash');
-            item.classList.add('bi-eye');
+            item.classList.remove('fa-eye-slash');
+            item.classList.add('fa-eye');
         } else {
             input.type = 'password';
-            item.classList.remove('bi-eye');
-            item.classList.add('bi-eye-slash');
+            item.classList.remove('fa-eye');
+            item.classList.add('fa-eye-slash');
         }
     });
   });

@@ -7,7 +7,7 @@
 
 /* Header styling */
 .header {
-    min-height: 40vh;
+    max-height: 40vh !important;
     width: 100%;
     background-image: linear-gradient(240deg, rgb(241, 70, 2), rgba(255, 197, 142, 0.7)), url('<?php echo $backgroundImagePath; ?>');
     background-position: center;
@@ -72,7 +72,7 @@ nav img {
     width: 100%;
 }
 
-nav2 {
+.nav2 {
     display: flex;
     padding: 2% 6%;
     justify-content: space-between;
@@ -181,7 +181,6 @@ nav .fa {
     width: 80%;
     margin: 20px;
     display: flex;
-    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out;
     justify-content: center;
     margin: 20px;
@@ -190,6 +189,7 @@ nav .fa {
 
 .card {
     display: flex;
+    flex-direction: row !important;
     margin-bottom: 20px;
     border-radius: 10px;
     transition: transform 0.3s ease-in-out;
@@ -238,6 +238,7 @@ nav .fa {
 /* Text box styling */
 .text-box {
     max-width: 600px;
+    margin-bottom: 100px;
     margin-left: auto; /* Move the box to the right */
     padding: 20px;
     width: 90%;
@@ -293,16 +294,17 @@ nav .fa {
     background-color: #fefefe;
     padding: 20px;
     border: 1px solid #888;
-    width: 90%; /* Adjust width as needed */
+    width: 50% !important; /* Adjust width as needed */
     max-width: 800px; /* Limit maximum width for readability */
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    font-size: 16px; /* Adjust font size for readability */
-    max-height: calc(100% - 40px); /* 100% height minus padding */
+    font-size: 10px !important; /* Adjust font size for readability */
+    max-height: calc(100% - 10px); /* 100% height minus padding */
     overflow-y: auto; /* Enable scrolling if content exceeds modal height */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
 }
 
 .image-grid {
@@ -315,9 +317,9 @@ nav .fa {
 }
 
 .image-grid img {
-    max-width: 100%; /* Maximum width */
+    max-width: 70% !important; /* Maximum width */
     height: auto; /* Maintain aspect ratio */
-    max-height: 250px; /* Maximum height */
+    max-height: 250px !important; /* Maximum height */
 }
 
 /* Centered Images */
@@ -337,13 +339,13 @@ nav .fa {
 /* Modal Content Headings */
 .modal-content h2 {
     color: #ff7300;
-    font-size: 24px; /* Larger font size for headings */
+    font-size: 26px; /* Larger font size for headings */
     margin-bottom: 10px;
 }
 
 /* Modal Content Paragraphs */
 .modal-content p {
-    font-size: 18px; /* Medium font size for paragraphs */
+    font-size: 15px; /* Medium font size for paragraphs */
     line-height: 1.6;
     color: #555;
 }

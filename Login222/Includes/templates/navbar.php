@@ -25,7 +25,6 @@ if (isset($_SESSION['login_user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Of Infocomm</title>
     <link rel="stylesheet" href="home.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
@@ -33,17 +32,18 @@ if (isset($_SESSION['login_user_id'])) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <!-- Rest of the body content -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 
 
 <style>
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
 
 .header {
-    min-height: 15vh;
+    min-height: 40px;
     width: 100%;
     background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(../Domain_picture/homepage.png);
     background-position: center;
@@ -51,8 +51,17 @@ if (isset($_SESSION['login_user_id'])) {
     position: relative;
 }
 
+.card-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 73vh;
+    font-family: 'Poppins', sans-serif;
+    margin: 100px;
+}
+
+
 .bottom {
-    min-height: 10vh;
+    min-height: 100px;
     width: 100%;
     background-color: rgb(241, 70, 2);
     background-position: center;
@@ -60,38 +69,67 @@ if (isset($_SESSION['login_user_id'])) {
 }
 
 nav {
-    display: flex;
+    justify-content: center; /* Center the navigation links */
     padding: 2% 6%;
     justify-content: space-between;
     align-items: center;
 }
 
-nav img {
-    width: 150px;
-}
-
-.nav-links {
-    flex: 1;
-    text-align: right;
-}
-
 .nav-links ul {
+    display: flex;
+    align-items: center;
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .nav-links ul li {
-    display: inline-block;
-    padding: 8px 12px;
+    padding: 0 12px;
     position: relative;
+}
+
+.nav-links ul li:first-child {
+    margin-right: auto; /* Push the logo to the left */
+}
+
+.nav-links ul li:first-child a {
+    padding: 0; /* Remove padding for the logo */
+}
+
+.nav-links ul li:first-child a img {
+    width: 150px;
+}
+
+.nav-links ul li:first-child::after {
+    content: none; /* Remove the orange line under the logo */
 }
 
 .nav-links ul li a,
 .welcome-message {
-    color: #FFF;
+    color: #fff;
     text-decoration: none;
     font-size: 15px;
+    white-space: nowrap; /* Ensure the text does not wrap */
+}
+
+.nav-links ul li:not(:first-child) {
+    margin-left: 0; /* Reset margin to prevent extra spacing */
+}
+
+.nav-links ul li:not(:first-child)::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #f44336;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+.nav-links ul li:not(:first-child):hover::after {
+    width: 100%;
 }
 
 .nav-links ul li::after {
@@ -107,18 +145,18 @@ nav img {
 .nav-links ul li:hover::after {
     width: 100%;
 }
-
-nav2 {
+/* Navigation bar styles */
+.nav2 {
     display: flex;
+    justify-content: center; /* Center the navigation links */
     padding: 2% 6%;
-    justify-content: space-between;
-    margin-top: 130px;
     align-items: center;
-}
+    color: #fff;
+}   
 
 .nav2-links {
-    flex: 1;
-    text-align: left;
+    text-align: center;
+    padding-top: 10px;
 }
 
 .nav2-links ul {
@@ -137,6 +175,7 @@ nav2 {
     color: #fff;
     text-decoration: none;
     font-size: 15px;
+    transition: color 0.3s ease;
 }
 
 .nav2-links ul li::after {
@@ -146,26 +185,96 @@ nav2 {
     background: #f44336;
     display: block;
     margin: auto;
-    transition: 0.5s;
+    transition: width 0.5s;
 }
 
 .nav2-links ul li:hover::after {
     width: 100%;
 }
 
+.nav2-links ul li:hover a {
+    color: #f44336; /* Change link color on hover */
+}
+
+.separator {
+    color: #fff; /* Color for the separator */
+    padding: 8px 12px;
+    font-size: 15px;
+}
+
+.text-box {
+    width: 90%;
+    color: #fff;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+
+.text-box h1 {
+    font-size: 62px;
+}
+
+.text-box p {
+    margin: 10px 0 40px;
+    font-size: 14px;
+    color: #fff;
+}
+
+nav .fa {
+    display: none;
+}
+
+@media(max-width: 700px) {
+    .text-box h1 {
+        font-size: 20px;
+    }
+    .nav-links ul li {
+        display: block;
+    }
+    .nav-links {
+        position: absolute;
+        background: #f44336;
+        height: 100vh;
+        width: 200px;
+        top: 0;
+        right: -200px;
+        text-align: left;
+        z-index: 2;
+        transition: 1s;
+    }
+    nav .fa {
+        display: block;
+        color: #fff;
+        margin: 10px;
+        font-size: 10px;
+        cursor: pointer;
+    }
+    .nav-links ul {
+        padding: 30px;
+    }
+}
+p {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 22px;
+}
+
 </style>
 
 <section class = "header">
     <nav>
-        <a href="../home.php"><img src="../Domain_picture/transRP.png" alt="Logo"></a>
         <div class="nav-links" id="navLinks">
             <i class="fas fa-times" onclick="hidemenu()"></i>
             <ul>
                 <?php if(isset($_SESSION['login_user'])): ?>
+                    <li><a href="../home.php"><img src="../Domain_picture/transRP.png" alt="Logo"></a></li>
                     <li><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></li>
                     <?php if($isAdmin): ?>
                         <li><a href="users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
-                                <span style="padding-left:6px">My Profile</span>
+                                <span>My Profile</span>
                         </a></li>
                         <li><a href="dashboard.php">Admin Panel</a></li>
                     <?php endif; ?>
@@ -261,11 +370,14 @@ nav2 {
 
 <!-- START BODY CONTENT  -->
 
-<div id="content" style="margin-left:240px;"> 
+<div id="content"> 
     <section class="content-wrapper" style="width: 100%;padding: 70px 0 0;">
         <div class="inside-page" style="padding:20px">
             <div class="page_title_top" style="margin-bottom: 1.5rem!important;">
                 <h1 style="color: #5a5c69!important;font-size: 1.75rem;font-weight: 400;line-height: 1.2;">
                     <?php echo $pageTitle; ?>
                 </h1>
-            </div>
+    </section>
+</div>
+
+            
