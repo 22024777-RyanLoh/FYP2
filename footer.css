@@ -120,7 +120,6 @@ ol {
 }
 
 nav {
-    display: flex;
     padding: 2% 6%;
     justify-content: space-between;
     align-items: center;

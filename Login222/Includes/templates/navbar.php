@@ -150,9 +150,11 @@ nav {
     display: flex;
     justify-content: center; /* Center the navigation links */
     padding: 2% 6%;
+    margin-top: 30px;
     align-items: center;
+    background: #333; /* Background color for the bottom section */
     color: #fff;
-}   
+}
 
 .nav2-links {
     text-align: center;
