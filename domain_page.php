@@ -103,7 +103,6 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $domain; ?></title>
     <link rel="stylesheet" href="domain_page.css">
-    <link rel="stylesheet" href="footer.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">  
@@ -125,7 +124,7 @@ mysqli_close($conn);
 <section class="header">
 <nav>
         <div class="nav-links" id="navLinks">
-            <i class="fas fa-times" onclick="hidemenu()"></i>
+            <i class="fal fa-times" onclick="hidemenu()"></i>
             <ul>
                 <?php if(isset($_SESSION['login_user'])): ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -145,7 +144,7 @@ mysqli_close($conn);
                 <?php endif; ?>
             </ul>
         </div>
-        <i class="fas fa-bars" onclick="showmenu()"></i>
+        <i class="fal fa-bars" onclick="showmenu()"></i>
     </nav>
 
     <div class="text-box">
@@ -186,8 +185,8 @@ mysqli_close($conn);
                             <p><b>Organisation</b>: <?php echo $project['Organisation']; ?></p>
                             <p><b>Members</b>: <?php echo $project['Members']; ?></p>
                             <p><b>Supervisor</b>: <?php echo $project['Supervisor']; ?></p>
-                            <button class="learn-more-btn">Learn More</button>
-                        </div>
+                            <button class="learn-more-btn" data-project-id="<?php echo $project['Project_ID']; ?>" data-domain-name="<?php echo $domainInfo['name']; ?>">Learn More</button>
+                            </div>
                         <div class="image-wrapper">
                             <?php foreach ($project['images'] as $image): ?>
                                 <img src="<?php echo 'data:image/jpeg;base64,' . ($image['Project_image']); ?>">
@@ -203,7 +202,7 @@ mysqli_close($conn);
 <div class="content">
     
     <footer class="footer">
-        <div class="footer-content container">
+        <div class="footer-content ">
             <div class="col-md-3">
                 <h3><a href="https://www.rp.edu.sg/about-us" & target=_blank>About Us</a></h3>
                 <ul>
@@ -233,7 +232,7 @@ mysqli_close($conn);
         <div class="bottom">
         <nav2>
         <div class="nav2-links" id="navLinks">
-            <div class="container">
+            <div>
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li class="separator">|</li>
@@ -386,6 +385,27 @@ function showYearSection(yearId) {
     document.getElementById(yearId).classList.add('active');
     event.target.classList.add('active');
 }
+
+function updateClickCount(projectID, domainName) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'update_click_count1.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(`projectID=${projectID}&domainName=${domainName}`);
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var buttons = document.querySelectorAll('.learn-more-btn');
+    buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var projectID = button.getAttribute('data-project-id');
+            var domainName = button.getAttribute('data-domain-name');
+            updateClickCount(projectID, domainName);
+        });
+    });
+});
+
 </script>
 </body>
 </html>

@@ -339,7 +339,7 @@ nav .fa {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 15vh; /* This makes the container take up the full height of the viewport */
+    height: 100px; /* This makes the container take up the full height of the viewport */
 }
 
 .form-input {
@@ -361,7 +361,8 @@ nav .fa {
 }
 
 .table-container {
-    display: flex;
+    min-height: 100vh;
+    margin:40px;
     justify-content: center;
     align-items: flex-end; /* Align items at the bottom */
     flex-grow: 1; /* Allow the container to grow */

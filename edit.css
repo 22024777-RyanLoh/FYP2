@@ -6,7 +6,7 @@
 
 .header {
     min-height: 40px;
-    width: 100%;
+    width: 103%;
     background-image: linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(Domain_picture/homepage.png);
     background-position: center;
     background-size: cover;
@@ -19,6 +19,7 @@ body {
     min-height: 100vh;
     font-family: 'Poppins', sans-serif;
     background: #f0f0f0;
+    overflow-x: hidden; /* Hide overflow to prevent stretching */
 }
 
 /* ========================================================================================== */
@@ -35,7 +36,7 @@ body {
 .footer {
     background-color: #333;
     color: #fff;
-    width: 100%;
+    width: 103%;
     position: relative;
     bottom: 0;
 }

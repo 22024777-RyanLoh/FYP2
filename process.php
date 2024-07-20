@@ -81,7 +81,7 @@ if (isset($_SESSION['login_user_id'])) {
                         <li><a href="Login222/users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
                                 <span>My Profile</span>
                         </a></li>
-                        <li><a href="login222/dashboard.php">Admin Panel</a></li>
+                        <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
                     <li><a href="edit.php">Domain</a></li>
                     <li><a href="upload.php">Project</a></li>
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "Invalid request method.";
 }
 ?>
-    <form action="save_to_database.php" method="post">
+    <form action="save_to_database.php" method="post" style="min-height:100vh;">
         <div class='container1'>
             <h2>Review the Information</h2>
 
@@ -236,8 +236,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="content">
     
-    <footer class="footer">
-        <div class="footer-content container">
+<footer class="footer">
+        <div class="footer-content">
             <div class="col-md-3">
                 <h3><a href="https://www.rp.edu.sg/about-us" & target=_blank>About Us</a></h3>
                 <ul>
@@ -267,7 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="bottom">
         <nav2>
         <div class="nav2-links" id="navLinks">
-            <div class="container">
+            <div class="container3">
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li class="separator">|</li>
@@ -279,6 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </nav2>
     </footer>
+
 
 </div>
     <script>

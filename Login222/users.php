@@ -25,6 +25,7 @@ if (isset($_SESSION['login_user'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../footer.css">
 
+    
 <script>
     $(document).ready(function() {
         // Toggle password visibility
@@ -226,6 +227,11 @@ function validatePassword() {
         #searchBox {
             width: 200px; /* Adjust the width of the search box here */
         }
+
+        .nav a.page-link {
+            color: black;
+        }
+
     </style>
 
 <?php
@@ -349,7 +355,7 @@ if ($do == "Manage") {
                     <?php
                     if ($total_pages > 1) {
                         if ($page > 1) {
-                            echo '<li class="page-item"><a class="page-link" href="#" onclick="loadPage(' . ($page - 1) . ')">Previous</a></li>';
+                            echo '<li class="page-item"><a class="page-link" style="color: black" href="#" onclick="loadPage(' . ($page - 1) . ')">Previous</a></li>';
                         }
 
                         for ($i = 1; $i <= $total_pages; $i++) {

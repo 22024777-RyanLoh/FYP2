@@ -41,6 +41,41 @@ body {
     bottom: 0;
 }
 
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-md-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+    box-sizing: border-box;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer ul li {
+    margin-bottom: 5px;
+}
+
+.footer a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.footer-socialicon {
+    margin-right: 10px;
+}
+
+
 .footer-content {
     display: flex;
     justify-content: space-between;
@@ -305,6 +340,7 @@ nav .fa {
     .text-box h1 {
         font-size: 20px;
     }
+    
     .nav-links ul li {
         display: block;
     }
@@ -340,6 +376,8 @@ nav .fa {
     .bottom nav2 ul li {
         margin: 10px 0;
     }
+
+    
 }
 
 .project {
@@ -360,6 +398,7 @@ p {
     font-weight: 300;
     line-height: 22px;
     padding: 10px;
+    
 }
 
 .cards {
@@ -528,4 +567,8 @@ p {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.center {
+    margin-top: auto;
 }

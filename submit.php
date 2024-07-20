@@ -65,7 +65,7 @@ if (isset($_SESSION['login_user_id'])) {
                         <li><a href="Login222/users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
                                 <span>My Profile</span>
                         </a></li>
-                        <li><a href="login222/dashboard.php">Admin Panel</a></li>
+                        <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
                     <li><a href="edit.php">Domain</a></li>
                     <li><a href="upload.php">Project</a></li>
@@ -157,7 +157,7 @@ $conn->close();
 
     </div>
 
-    <form action="process.php" method="post">
+    <form action="process.php" method="post" style="min-height:100vh;">
         <div class="m-3">
             <label for="inputText" class="form-label"></label>
             <?php
@@ -221,8 +221,8 @@ $conn->close();
 
 <div class="content">
     
-    <footer class="footer">
-        <div class="footer-content container">
+<footer class="footer">
+        <div class="footer-content">
             <div class="col-md-3">
                 <h3><a href="https://www.rp.edu.sg/about-us" & target=_blank>About Us</a></h3>
                 <ul>
@@ -252,7 +252,7 @@ $conn->close();
         <div class="bottom">
         <nav2>
         <div class="nav2-links" id="navLinks">
-            <div class="container">
+            <div class="container3">
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li class="separator">|</li>
@@ -264,6 +264,7 @@ $conn->close();
         </div>
     </nav2>
     </footer>
+
 
 </div>
     <script>

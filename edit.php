@@ -19,20 +19,6 @@ if (isset($_SESSION['login_user_id'])) {
     }
 }
 
-// Define default values for page and limit
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
-$limit = 5;
-$start = ($page - 1) * $limit;
-
-// Fetch data with pagination
-$sql = "SELECT * FROM domains ORDER BY domain_id DESC LIMIT $start, $limit";
-$result = $conn->query($sql);
-
-// Fetch total number of records
-$total_records_sql = "SELECT COUNT(*) FROM domains";
-$total_records_result = $conn->query($total_records_sql);
-$total_records = $total_records_result->fetch_array()[0];
-$total_pages = ceil($total_records / $limit);
 ?>
 
 <!DOCTYPE html>
@@ -42,13 +28,15 @@ $total_pages = ceil($total_records / $limit);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Edit Domain and Homepage Images</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="project.css">
     <link rel="stylesheet" href="edit.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 
@@ -64,7 +52,7 @@ $total_pages = ceil($total_records / $limit);
                         <li><a href="Login222/users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
                                 <span>My Profile</span>
                         </a></li>
-                        <li><a href="login222/dashboard.php">Admin Panel</a></li>
+                        <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
                     <li><a href="edit.php">Domain</a></li>
                     <li><a href="upload.php">Project</a></li>
@@ -87,6 +75,21 @@ $total_pages = ceil($total_records / $limit);
     <div class='row'>
         <div class='col-md-6 mx-auto'>
             <?php
+            // Define default values for page and limit
+            $page = isset($_GET['page']) ? $_GET['page'] : 1;
+            $limit = 5;
+            $start = ($page - 1) * $limit;
+
+            // Fetch data with pagination
+            $sql = "SELECT * FROM domains ORDER BY domain_id DESC LIMIT $start, $limit";
+            $result = $conn->query($sql);
+
+            // Fetch total number of records
+            $total_records_sql = "SELECT COUNT(*) FROM domains";
+            $total_records_result = $conn->query($total_records_sql);
+            $total_records = $total_records_result->fetch_array()[0];
+            $total_pages = ceil($total_records / $limit);
+
             // Handle domain image upload and new domain addition
             if (isset($_POST["submit_add_domain"])) {
                 if (isset($_FILES["domain_image"])) {
@@ -115,6 +118,13 @@ $total_pages = ceil($total_records / $limit);
                         }
                     }
                 }
+            }
+            ?>
+            
+            <?php
+            if (isset($_SESSION['delete_message'])) {
+                echo "<div class='alert alert-success'>" . $_SESSION['delete_message'] . "</div>";
+                unset($_SESSION['delete_message']); // Clear the session variable after displaying the message
             }
             ?>
             
@@ -182,9 +192,8 @@ $total_pages = ceil($total_records / $limit);
                                     data-description="<?php echo $row['domain_description']; ?>"
                                     data-image="<?php echo $row['domain_image']; ?>">Edit
                             </button>
-                            <a href="image_delete.php?id=<?php echo $row['domain_id']; ?>&name=<?php echo $row['domain_image']; ?>"
-                                class="btn btn-danger delete-link" onclick="return confirm('Are you sure you want to delete this item?');"> Delete
-                            </a>
+                            <a href="delete.php?id=<?php echo $row['domain_id']; ?>" class="btn btn-sm btn-danger" onclick="confirmDelete()">Delete</a>
+                        
                         </td>
                     </tr>
                     <?php
@@ -263,7 +272,7 @@ $total_pages = ceil($total_records / $limit);
 <div class="content">
     
     <footer class="footer">
-        <div class="footer-content container">
+        <div class="footer-content">
             <div class="col-md-3">
                 <h3><a href="https://www.rp.edu.sg/about-us" & target=_blank>About Us</a></h3>
                 <ul>
@@ -293,7 +302,7 @@ $total_pages = ceil($total_records / $limit);
         <div class="bottom">
         <nav2>
         <div class="nav2-links" id="navLinks">
-            <div class="container">
+            <div class="container3">
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li class="separator">|</li>
@@ -319,6 +328,12 @@ $total_pages = ceil($total_records / $limit);
     function hidemenu() {
         navLinks.style.right = "-200px";
     }
+</script>
+
+<script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this item?');
+        }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
@@ -366,22 +381,33 @@ $total_pages = ceil($total_records / $limit);
         });
     });
 
+
     $(document).ready(function () {
-        function loadTableData(search, page = 1) {
-            $.ajax({
-                url: 'fetch_domains.php',
-                type: 'GET',
-                data: { search: search, page: page },
-                dataType: 'html',
-                success: function (response) {
-                    $('#domainTableBody').html(response);
-                    updatePaginationLinks(search, page);
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-            });
+    function loadTableData(search, page = 1) {
+        $.ajax({
+            url: 'fetch_domains.php',
+            type: 'GET',
+            data: { search: search, page: page },
+            dataType: 'html',
+            success: function (response) {
+                $('#domainTableBody').html(response);
+                updatePaginationLinks(search, page);
+            
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    // Event delegation for dynamically added Delete buttons
+    $(document).on('click', '.btn-danger', function (e) {
+        e.preventDefault(); // Prevent the default anchor action
+        var href = $(this).attr('href');
+        if (confirm('Are you sure you want to delete this domain?')) {
+            window.location.href = href;
         }
+    });
 
         function updatePaginationLinks(search, currentPage) {
             $.ajax({

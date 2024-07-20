@@ -10,6 +10,7 @@ include 'connect.php';
 include 'Includes/functions/functions.php'; 
 include 'Includes/templates/header.php';
 
+
 // TEST IF THE SESSION HAS BEEN CREATED BEFORE
 if(isset($_SESSION['login_user']) && $_SESSION['user_role'] == 'Admin') {
     include 'Includes/templates/navbar.php';
@@ -42,8 +43,10 @@ WILL ADD THINGS LATER.
     <link rel="stylesheet" href="../footer.css">
 </head>
 <body>
-<footer class="footer">
-        <div class="footer-content container">
+<div class="content">
+    
+    <footer class="footer">
+        <div class="footer-content">
             <div class="col-md-3">
                 <h3><a href="https://www.rp.edu.sg/about-us" & target=_blank>About Us</a></h3>
                 <ul>
@@ -73,7 +76,7 @@ WILL ADD THINGS LATER.
         <div class="bottom">
         <nav2>
         <div class="nav2-links" id="navLinks">
-            <div class="container">
+            <div class="container3">
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li class="separator">|</li>
@@ -85,6 +88,8 @@ WILL ADD THINGS LATER.
         </div>
     </nav2>
     </footer>
+
+</div>
 </body>
 </html>
 

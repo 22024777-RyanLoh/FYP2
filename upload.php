@@ -50,7 +50,7 @@ if (isset($_SESSION['login_user_id'])) {
                         <li><a href="Login222/users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
                                 <span>My Profile</span>
                         </a></li>
-                        <li><a href="login222/dashboard.php">Admin Panel</a></li>
+                        <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
                     <li><a href="edit.php">Domain</a></li>
                     <li><a href="upload.php">Project</a></li>
@@ -69,15 +69,14 @@ if (isset($_SESSION['login_user_id'])) {
         <h1>Manage Projects</h1>
     </div>
 
+    <div class="container">
     <form action="submit.php" method="post" enctype="multipart/form-data">
-
-        <div class="form-input" >
-            <input type="file" name="pdf_file" required="" >
-            <button type="submit" class="btn btn-primary">Upload</button>
+        <div class="form-input">
+            <input type="file" name="pdf_file" required class="form-control" style="display:auto" >
+            <button type="submit" class="btn btn-primary" style="margin:10px">Upload</button>
         </div>
-
     </form>
-
+</div>
     <div class="">
         <div class="row">
             <div class="'col-md-6 mx-auto">
@@ -91,7 +90,7 @@ if (isset($_SESSION['login_user_id'])) {
             $domains_result = $conn->query($domains_sql);
 
             // Pagination configuration
-            $limit = 10; // Number of records per page
+            $limit = 15; // Number of records per page
             $page = isset($_GET['page']) ? $_GET['page'] : 1; // Current page number, default is 1
             $start = ($page - 1) * $limit; // Calculate starting point for the query
 
@@ -105,7 +104,7 @@ if (isset($_SESSION['login_user_id'])) {
 
     <div class="table-container">
         <div class="row">
-            <div class=""col-md-12>
+            <div class="col-md-12">
                 <h2>Project List</h2>
                 <table class="table">
                     <thead>
@@ -141,8 +140,8 @@ if (isset($_SESSION['login_user_id'])) {
                                             data-year="<?php echo $row['Project_year']; ?>"
                                             data-semester="<?php echo $row['Project_semester']; ?>">Edit
                                     </button>
-                                    <a href="project_delete.php?id=<?php echo $row['Project_ID']; ?>&name=<?php echo $row['Project_title']; ?>"
-                                       class="btn btn-danger">Delete</a>
+                                    <a href="project_delete.php?id=<?php echo $row['Project_ID']; ?>&name=<?php echo $row['Project_title']; ?>"class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you want to delete the project: <?php echo $row['Project_title']; ?>?');">Delete</a>
                                 </td>
                             </tr>
                             <?php
@@ -152,29 +151,28 @@ if (isset($_SESSION['login_user_id'])) {
                     </tbody>
                 </table>
 
-                                <!-- Pagination links -->
-                                <div class="pagination justify-content-center">
-                    <?php
-                    $sql_count = "SELECT COUNT(Project_ID) AS total FROM project";
-                    $result_count = $conn->query($sql_count);
-                    $row_count = $result_count->fetch_assoc();
-                    $total_pages = ceil($row_count["total"] / $limit);
-
-                    if ($total_pages > 1) {
-                        if ($page > 1) {
-                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">Previous</a></li>';
+                <!-- Pagination links -->
+                <div class="pagination justify-content-center">
+                        <?php
+                        $sql_count = "SELECT COUNT(Project_ID) AS total FROM project";
+                        $result_count = $conn->query($sql_count);
+                        $row_count = $result_count->fetch_assoc();
+                        $total_pages = ceil($row_count["total"] / $limit);
+                        
+                        if ($total_pages > 1) {
+                            if ($page > 1) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">Previous</a></li>';
+                            }
+                        
+                            for ($i = 1; $i <= $total_pages; $i++) {
+                                echo '<li class="page-item' . ($page == $i ? ' active' : '') . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                            }
+                        
+                            if ($page < $total_pages) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next</a></li>';
+                            }
                         }
-
-                        for ($i = 1; $i <= $total_pages; $i++) {
-                            echo '<li class="page-item' . ($page == $i ? ' active' : '') . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
-                        }
-
-                        if ($page < $total_pages) {
-                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next</a></li>';
-                        }
-                    }
-                    ?>
-                    </div>
+                        ?>
                 </div>
             </div>
         </div>
@@ -268,7 +266,7 @@ if (isset($_SESSION['login_user_id'])) {
     <div class="content">
     
     <footer class="footer">
-        <div class="footer-content container">
+        <div class="footer-content">
             <div class="col-md-3">
                 <h3><a href="https://www.rp.edu.sg/about-us" & target=_blank>About Us</a></h3>
                 <ul>
@@ -298,7 +296,7 @@ if (isset($_SESSION['login_user_id'])) {
         <div class="bottom">
         <nav2>
         <div class="nav2-links" id="navLinks">
-            <div class="container">
+            <div class="container3">
             <ul>
                 <li><a href="home.php">Home</a></li>
                 <li class="separator">|</li>
@@ -386,6 +384,3 @@ $('#editForm').on('submit', function (event) {
 </script>
 </body>
 </html>
-
-
-

@@ -23,11 +23,7 @@
     flex-wrap: wrap;
 }
 
-.footer-section {
-    flex: 1;
-    padding-left: 500px;
-    min-width: 200px;
-}
+
 
 .footer-section h3 {
     margin-bottom: 10px;
