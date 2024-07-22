@@ -71,17 +71,17 @@ if (isset($_SESSION['login_user_id'])) {
 <body>
 <section class="header">
     <nav>
-    <div class="nav-links" id="navLinks">
+        <div class="nav-links" id="navLinks">
             <i class="fas fa-times" onclick="hidemenu()"></i>
             <ul>
                 <?php if(isset($_SESSION['login_user'])): ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
-                    <li><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></li>
-                    <?php if($isAdmin): ?>  
-                        <li><a href="Login222/users.php?do=Edit&user_id=<?php echo $_SESSION['login_user_id'] ?>">
-                                <span>My Profile</span>
+                    <li><a href="#" onclick="showProfileModal()"><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></a></li>
+                    <?php if($isAdmin): ?>
+                        <li><a href="/fyp/Login222/dashboard.php">
+                                <span style="color: #fff;">Dashboard</span>
                         </a></li>
-                        <li><a href="login222/users.php">Admin Panel</a></li>
+                        <li><a href="/fyp/Login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
                     <li><a href="edit.php">Domain</a></li>
                     <li><a href="upload.php">Project</a></li>
@@ -94,7 +94,8 @@ if (isset($_SESSION['login_user_id'])) {
         </div>
         <i class="fas fa-bars" onclick="showmenu()"></i>
     </nav>
-    </section>
+</section>
+
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $text = $_POST['inputText'];

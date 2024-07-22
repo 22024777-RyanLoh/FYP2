@@ -276,10 +276,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
             <ul>
                 <?php if(isset($_SESSION['login_user'])): ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
-                    <li><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></li>
+                    <li><a href="#" onclick="showProfileModal()"><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></a></li>
                     <?php if($isAdmin): ?>
-                        <li><a href="#" onclick="showProfileModal()">
-                                <span>My Profile</span>
+                        <li><a href="/fyp/Login222/dashboard.php">
+                                <span style="color: #fff;">Dashboard</span>
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
@@ -863,7 +863,7 @@ function showErrorAlert(title, text) {
                             <li><a href="https://www.rp.edu.sg/service-excellence/contact-us" target="_blank">Contact</a></li>
                         </ul>
                     </div>
-                    <p style="padding: 0;">9 Woodlands Avenue 9, Singapore 738964 <br> Copyright © Republic Polytechnic. All Rights Reserved.</p>
+                    <p style="padding: 0">9 Woodlands Avenue 9, Singapore 738964 <br> Copyright © Republic Polytechnic. All Rights Reserved.</p>
                 </div>
             </nav2>
         </div>
