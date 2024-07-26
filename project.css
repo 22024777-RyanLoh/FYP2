@@ -13,143 +13,72 @@
     position: relative;
 }
 
+@media (max-width: 768px) {
+    .header {
+        min-height: 15vh;
+    }
+}
+
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
-    background: #f0f0f0;
-}
-
-/* ========================================================================================== */
-
-
-.content {
-    flex: 1;
-}
-
-.content h3 a,  ul li a  {
-    color: #fff !important;
-}
-
-.footer {
-    background-color: #333;
-    color: #fff;
+    min-height: 55vh;
     width: 100%;
     position: relative;
-    bottom: 0;
+    background-image: linear-gradient(rgba(250, 250, 250, 0), rgba(255, 255, 255, 0)), url(Domain_picture/card_background.jpg);
+    background-position: center;
+    background-size: cover;
 }
 
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 0;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-}
-
-.footer-section {
-    flex: 1;
-    padding-left: 500px;
-    min-width: 200px;
-}
-
-.footer-section h3 {
-    margin-bottom: 10px;
-}
-
-.footer-section ul {
-    list-style: none; /* Remove the list-style (dots) from the ul */
-    padding: 13px; /* Remove padding to ensure no extra space */
-}
-
-.footer-section ul li {
-    margin-bottom: 10px;
-    list-style: none; /* Ensure no dots for the li elements */
-}
-
-.footer-section ul li a {
-    color: #fff;
-    text-decoration: none; /* Ensure no underline for the links */
-    transition: color 0.3s ease;
-}
-
-.footer-section ul li a:hover {
-    color: #aaa; /* Darken the color slightly on hover */
-}
-
-.footer-section.social-media ul {
-    display: flex;
-}
-
-.footer-section.social-media ul li {
-    margin-right: 10px;
-}
-
-.footer-section.social-media ul li a {
-    font-size: 24px;
-    color: #fff; /* Ensure social media icons are white */
-}
-
-.footer-bottom {
-    background-color: #222;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-}
-
-.footer-bottom nav ul {
-    list-style: none; /* Remove the list-style (dots) from the ul */
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
-}
-
-.footer-bottom nav ul li {
-    margin: 0 10px;
-    list-style: none; /* Ensure no dots for the li elements */
-}
-
-.footer-bottom nav ul li a {
-    color: #fff;
-    text-decoration: none; /* Ensure no underline for the links */
-}
-
-.footer-bottom nav ul li a:hover {
-    color: #aaa; /* Darken the color slightly on hover */
-}
-
-.separator {
-    color: #fff;
-}
-
-/* to remove bullets from an unordered list */
-ul {
-    list-style: none;
-}
-  
-/* to remove bullets from an ordered list */
-ol {
-    list-style: none; 
-}
-
-
-/* ========================================================================================== */
-/* rgb(241, 70, 2); */
 .bottom {
-    min-height: 100px;
+    min-height: 10vh;
     width: 100%;
-    background-color: #333;
+    background-color:#333;
     background-position: center;
     position: relative;
 }
 
+/*--------------navbar------------------*/
+.hide-icon {
+    visibility: hidden;
+}
+
+.show-icon {
+    visibility: hidden;
+    position: fixed !important;
+    top: 20px; /* Adjust the top position as needed */
+    right: 10px; /* Adjust the right position as needed */
+}
+
+@media (max-width: 768px) {
+    .show-icon {
+        visibility: visible;
+    }
+
+    .hide-icon {
+        visibility: visible;
+    }
+}
+
 nav {
-    justify-content: center; /* Center the navigation links */
+    display: flex;
     padding: 2% 6%;
     justify-content: space-between;
     align-items: center;
+}
+
+@media (max-width:768px){
+    .nav-links fal fa-times{
+        justify-items: right;
+    }
+
+}
+
+nav img {
+    width: 150px;
+}
+
+.nav-links {
+    flex: 1;
+    text-align: right;
 }
 
 .nav-links ul {
@@ -163,24 +92,9 @@ nav {
 }
 
 .nav-links ul li {
-    padding: 0 12px;
+    display: inline-block;
+    padding: 8px 12px;
     position: relative;
-}
-
-.nav-links ul li:first-child {
-    margin-right: auto; /* Push the logo to the left */
-}
-
-.nav-links ul li:first-child a {
-    padding: 0; /* Remove padding for the logo */
-}
-
-.nav-links ul li:first-child a img {
-    width: 150px;
-}
-
-.nav-links ul li:first-child::after {
-    content: none; /* Remove the orange line under the logo */
 }
 
 .nav-links ul li a,
@@ -188,25 +102,22 @@ nav {
     color: #fff;
     text-decoration: none;
     font-size: 15px;
-    white-space: nowrap; /* Ensure the text does not wrap */
 }
 
-.nav-links ul li:not(:first-child) {
-    margin-left: 0; /* Reset margin to prevent extra spacing */
+.nav-links ul li:first-child {
+    margin-right: auto !important; /* Push the logo to the left */
 }
 
-.nav-links ul li:not(:first-child)::after {
-    content: '';
-    width: 0%;
-    height: 2px;
-    background: #f44336;
-    display: block;
-    margin: auto;
-    transition: 0.5s;
+.nav-links ul li:first-child a {
+    padding: 0 m !important; /* Remove padding for the logo */
 }
 
-.nav-links ul li:not(:first-child):hover::after {
-    width: 100%;
+.nav-links ul li:first-child a img {
+    width: 150px !important;
+}
+
+.nav-links ul li:first-child::after {
+    content: none !important; /* Remove the orange line under the logo */
 }
 
 .nav-links ul li::after {
@@ -221,64 +132,6 @@ nav {
 
 .nav-links ul li:hover::after {
     width: 100%;
-}
-/* Navigation bar styles */
-.nav2 {
-    display: flex;
-    justify-content: center; /* Center the navigation links */
-    padding: 2% 6%;
-    margin-top: 30px;
-    align-items: center;
-    background: #333; /* Background color for the bottom section */
-    color: #fff;
-}
-
-.nav2-links {
-    text-align: center;
-    padding-top: 10px;
-}
-
-.nav2-links ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav2-links ul li {
-    display: inline-block;
-    padding: 8px 12px;
-    position: relative;
-}
-
-.nav2-links ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 15px;
-    transition: color 0.3s ease;
-}
-
-.nav2-links ul li::after {
-    content: '';
-    width: 0%;
-    height: 2px;
-    background: #f44336;
-    display: block;
-    margin: auto;
-    transition: width 0.5s;
-}
-
-.nav2-links ul li:hover::after {
-    width: 100%;
-}
-
-.nav2-links ul li:hover a {
-    color: #f44336; /* Change link color on hover */
-}
-
-.separator {
-    color: #fff; /* Color for the separator */
-    padding: 8px 12px;
-    font-size: 15px;
 }
 
 .text-box {
@@ -305,24 +158,32 @@ nav .fa {
     display: none;
 }
 
-@media(max-width: 700px) {
+@media(max-width: 768px) {
+
     .text-box h1 {
         font-size: 20px;
     }
-    .nav-links ul li {
+
+    .nav-links ul{
         display: block;
     }
+
     .nav-links {
         position: absolute;
-        background: #f44336;
-        height: 100vh;
-        width: 200px;
-        top: 0;
-        right: -200px;
-        text-align: left;
-        z-index: 2;
+        background: #333;
+        height: 65vh;
+        width: 100%; /* Full width to cover the screen */
+        top: -100vh; /* Start off-screen at the top */
+        left: 0; /* Ensure it covers the entire width */
+        text-align: center;
+        z-index: 1000; /* Ensure it appears on top */
         transition: 1s;
     }
+
+    .nav-links.active {
+        top: 0 !important;
+    }
+
     nav .fa {
         display: block;
         color: #fff;
@@ -330,45 +191,189 @@ nav .fa {
         font-size: 10px;
         cursor: pointer;
     }
-    .nav-links ul {
-        padding: 30px;
+
+    .nav-links ul li {
+        display: block !important; /* Block display for list items */
+        margin: 20px 0; /* Spacing between items */
+    }
+
+    nav .fa-bars, nav .fa-times {
+        justify-content: right;
+        color: #fff;
+        margin: 10px;
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+}
+/*--------------navbar------------------*/
+
+/*--------------footer------------------*/
+.content {
+    flex: 1;
+}
+
+.content h3 a,  ul li a  {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+}
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.footer-content div {
+    margin: 10px;
+}
+
+@media (max-width: 768px){
+    .footer-content div {
+        flex: 1;
+        margin: 10px;
+        }
+    }
+
+.footer-content h3 {
+    margin-bottom: 10px;
+}
+.footer-content ul {
+    list-style: none;
+    padding: 0;
+}
+.footer-content ul li {
+    margin: 5px 0;
+}
+.footer-content ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+.footer-content .social-media ul {
+    display: flex;
+    padding-left: 0;
+}
+.footer-content .social-media ul li {
+    margin-right: 10px;
+}
+.footer-content .social-media ul li a {
+    font-size: 18px;
+}
+.bottom {
+    text-align: center;
+    padding-top: 10px;
+}
+.nav2-links {
+    margin-top: 20px;
+}
+.nav2-links ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+.nav2-links ul li {
+    margin: 0 10px;
+}
+.nav2-links ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+p{
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 22px;
+    padding: 10px;
+    
+}
+
+.separator {
+    color: #fff;
+}
+/*--------------footer------------------*/
+
+/*--------------control------------------*/
+
+@media (max-width:768px) {
+    .project_control{
+        display: flex;
+    }
+
+    .form-control{
+        display: flex;
+        width: 300px !important;
     }
 }
 
-.container, .container2 {
+.title-text {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 15vh; /* This makes the container take up the full height of the viewport */
+    height: 100px; /* This makes the container take up the full height of the viewport */
 }
 
-.form-input {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1%;
+#addProjectForm{
+    background-color: #f8f9fa; /* Light background for the add domain form */
+    border: 1px solid #ced4da; /* Border around the form */
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 1000px; /* Set a maximum width for better readability */
+    margin: 20px auto; /* Center align the form */
+    margin-bottom: 15px; 
 }
 
-.category {
-    display: flex;
-    justify-content: center;
-    margin: 10px 10; /* Adjust the margin to your liking */
+#addProjectForm label {
+    font-weight: bold;
 }
 
-.category select {
-    width: 250px; /* Adjust this value as needed */
-    margin: 0 10px; /* Adjust the margin to your liking */
-}
+@media (max-width: 768px) {
+    .form-input {
+        width: 90%; /* Set a smaller width for smaller screens */
+        max-width: none; /* Remove max-width constraint */
+        padding: 10px; /* Add padding for better spacing */
+    }
 
+    .form-control {
+        width: 100%; /* Ensure the file input takes full width */
+        margin-bottom: 10px; /* Add margin below file input */
+    }
+
+    .btn {
+        width: 25%; /* Make button full width */
+        margin: 10px 0; /* Adjust margin for spacing */
+    }
+}
+/*--------------control------------------*/
+
+/*--------------table------------------*/
 .table-container {
-    display: flex;
+    min-height: 100vh;
+    margin:40px;
     justify-content: center;
-    align-items: flex-end; /* Align items at the bottom */
-    flex-grow: 1; /* Allow the container to grow */
 }
 
-.table-container h2 {
-    margin-top: 30px; /* Adjust the margin as needed */
+.table {
+    width: 100%;
+    border-collapse: collapse; /* Ensures table borders are collapsed */
+}
+
+.table-content{
+    justify-content: center;
+}
+
+/* Default styles for table headers and cells */
+.responsive-table th, .responsive-table td {
+    padding: 8px;
+    text-align: left;
+    align-content: center;
 }
 
 .pagination {
@@ -403,24 +408,22 @@ nav .fa {
     color: #fff;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table th {
-    padding: 8px; /* Add padding for table headers */
-    text-align: left;
-    border: none; /* Remove border */
-    background-color: #f0f0f0; /* Add background color */
-}
-
 .table td {
-    max-width: 450px;
+    max-width: 550px;
     padding: 8px; /* Add padding for table cells */
     vertical-align: middle;
     text-align: left; /* Center align the content */
     border: 1px solid #ddd; /* Add border */
+    align-content: center;
+}
+
+/* Adjust button styles if needed */
+.table .btn {
+    padding: 5px 10px; /* Adjust padding to fit the buttons nicely */
+    font-size: 14px; /* Adjust font size for better fit */
+    margin-left: 5px;
+    margin-right: 5px;
+    align-content: center;
 }
 
 /* Adjust button styles if needed */
@@ -456,11 +459,169 @@ nav .fa {
     outline: none; /* Remove default outline */
 }
 
-p {
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 22px;
+@media (max-width: 768px) {
+    .table-container {
+        display: flex;
+        flex-direction: column; /* Stack children vertically */
+        padding: 10px; /* Add padding around the container */
+    }
+
+    .table-content {
+        margin: auto;
+    }
+
+    .table {
+        width: 100%; /* Ensure the table takes the full width */
+        border-collapse: collapse; /* Collapse table borders */
+    }
+
+    .table.responsive-table tr {
+        width: 315px; /* Ensure table rows take full width */
+        display: block; /* Make rows block elements */
+        box-sizing: border-box; /* Include padding and border in element's total width and height */
+        margin-bottom: 10px; /* Add space between rows */
+    }
+
+    .table.responsive-table td,
+    .table.responsive-table th {
+        display: block; /* Make cells block elements */
+        width: 100%; /* Make cells take full width of the row */
+        box-sizing: border-box; /* Include padding and border in width */
+        padding: 10px; /* Add padding inside cells */
+        border: 1px solid #ddd; /* Add border for separation */
+        position: relative; /* For positioning pseudo-elements */
+    }
+
+    .table thead {
+        display: none; /* Hide table header */
+    }
+
+    .table tbody td::before {
+        content: attr(data-label); /* Use data-label to show the header above each cell */
+        font-weight: bold; /* Make header labels bold */
+        display: block; /* Make labels block elements */
+        margin-bottom: 5px; /* Space between label and cell content */
+    }
+
+    .table tbody tr {
+        display: block; /* Stack rows as block elements */
+        margin-bottom: 10px; /* Space between rows */
+        border-bottom: 1px solid #ddd; /* Border at the bottom of each row */
+        padding: 10px 0; /* Vertical padding */
+    }
+
+    .table tbody td {
+        border-bottom: 1px solid #ddd; /* Border at the bottom of each cell */
+        width: 100%; /* Full width for each cell */
+        box-sizing: border-box; /* Include padding in width calculation */
+    }
+
+    .table tbody td:nth-child(4),
+    .table tbody td:nth-child(5),
+    .table tbody td:nth-child(6) {
+        display: block; /* Display specific columns as block elements */
+    }
+
+    .table thead th:last-child {
+        display: block; /* Ensure action column header is visible */
+    }
+    .table tbody td:last-child {
+        text-align: center; /* Center align text for action column */
+    }
+
+    .btn {
+        font-size: 14px; /* Smaller font size for buttons */
+        padding: 8px; /* Less padding for buttons */
+    }
+
+    .btn i {
+        font-size: 16px; /* Smaller icon size */
+    }
 }
 
 
+/*--------------table------------------*/
+.btn-primary{
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;;
+}
+
+@media (max-width: 768px) {
+    .table .edit-btn {
+        width: 100%; /* Allow button width to adjust automatically */
+        padding: 8px 15px; /* Reduce padding */
+        font-size: 14px; /* Smaller font size */
+    }
+
+    .table .btn-danger {
+        width: 20%;
+    }
+}
+
+.d-flex.align-items-center {
+    justify-content: center; /* Center align items horizontally */
+}
+
+@media (min-width: 768px) {
+    .d-flex.align-items-center {
+        margin: auto; /* Center align the entire container */
+    }
+
+}
+/*--------------process.css------------------*/
+/* Base styles for the form */
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .container1 {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        margin:auto !important;
+        max-width: 300px; /* Restrict the width */
+    }
+
+    .form-group, .form-inline {
+        margin-bottom: 15px; /* Add space between form elements */
+    }
+
+    .form-control {
+        width: 100%; /* Ensure form controls use full width */
+    }
+
+    .image-description-group {
+        width: 100%;
+    }
+
+    .form-inline {
+        width: 100%;
+        display: flex;
+        flex-direction: column; /* Stack image and description vertically */
+    }
+
+    .image-container{
+        margin: auto;
+    }
+    .image-container img {
+        width: 100%; /* Ensure images are responsive */
+        height: auto;
+        max-height: 200px; /* Set a max height for better scaling */
+    }
+
+    .btn {
+        width: 100%; /* Make the submit button full width */
+        margin-top: 10px; /* Add space above the button */
+    }
+}
+
+/*--------------process.css------------------*/
+
+.red-asterisk {
+    color: red;
+  }

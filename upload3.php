@@ -84,9 +84,11 @@ if ($stmt->execute()) {
         $stmt->execute();
     }
  
-    header("Location: upload.php");
+    // Redirect to upload.php with status
+    header("Location: upload.php?status=success");
 } else {
-    echo "Error: " . $stmt->error;
+    // Redirect to upload.php with status
+    header("Location: upload.php?status=error");
 }
 //Close the statement
 $stmt->close();

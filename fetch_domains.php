@@ -25,33 +25,17 @@ $i = ($page - 1) * $limit + 1;
 while ($row = $result->fetch_assoc()) {
     echo "<tr>";
     echo "<td>{$i}</td>";
-    echo "<td><img src='Domain_picture/{$row['domain_image']}' style='height:150px; width:250px;'></td>";
-    echo "<td>{$row['domain_name']}</td>";
-    echo "<td>{$row['domain_description']}</td>";
+    echo "<td data-label='{$row['domain_name']}'><img src='data:image/jpeg;base64,{$row['domain_image']}' style='height:150px; width:250px;'></td>";
+    echo "<td data-label='{$row['domain_name']}'>{$row['domain_name']}</td>";
+    echo "<td data-label='{$row['domain_description']}'>{$row['domain_description']}</td>";
     echo "<td>";
-    echo "<button class='btn btn-primary' data-toggle='modal' data-target='#editModal' data-id='{$row['domain_id']}' data-domain='{$row['domain_name']}' data-description='{$row['domain_description']}' data-image='{$row['domain_image']}'>Edit</button>";
-    echo "<a href='image_delete.php?id={$row['domain_id']}&name={$row['domain_image']}' class='btn btn-danger'>Delete</a>";
+    echo "<button class='btn btn-primary' data-toggle='modal' data-target='#editModal' data-id='{$row['domain_id']}' data-domain='{$row['domain_name']}' data-description='{$row['domain_description']}' data-image='{$row['domain_image']}'><i class='fas fa-edit'></i></button>";
+    echo '<a href="image_delete.php?id=' . $row['domain_id'] . '&name=' . urlencode($row['domain_name']) . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this domain?\');"><i class="fas fa-trash"></i></a>';
     echo "</td>";
     echo "</tr>";
     $i++;
 }
 
-// Output pagination links
-echo "<div class='pagination justify-content-center'>";
-if ($total_pages > 1) {
-    if ($page > 1) {
-        echo '<li class="page-item"><a class="page-link" href="#" onclick="loadPage(' . ($page - 1) . ')">Previous</a></li>';
-    }
-
-    for ($i = 1; $i <= $total_pages; $i++) {
-        echo '<li class="page-item' . ($page == $i ? ' active' : '') . '"><a class="page-link" href="#" onclick="loadPage(' . $i . ')">' . $i . '</a></li>';
-    }
-
-    if ($page < $total_pages) {
-        echo '<li class="page-item"><a class="page-link" href="#" onclick="loadPage(' . ($page + 1) . ')">Next</a></li>';
-    }
-}
-echo "</div>";
 
 // Close database connection
 $conn->close();

@@ -29,54 +29,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit("Image size exceeds the limit. Maximum allowed size is 1MB.");
         }
 
-        // Generate a unique filename for the uploaded image
-        $fileName = time() . "." . $fileType;
-        $uploadPath = "Domain_picture/" . $fileName;
+        // Read the image file as binary data and encode it in base64
+        $imageData = base64_encode(file_get_contents($_FILES["domain_image"]["tmp_name"]));
 
-        // Move uploaded file to the specified upload directory
-        if (move_uploaded_file($_FILES["domain_image"]["tmp_name"], $uploadPath)) {
-            // Remove old image file from directory if it exists
-            $sql_select = "SELECT domain_image FROM domains WHERE domain_id = ?";
-            $stmt_select = $conn->prepare($sql_select);
-            $stmt_select->bind_param("i", $_POST["id"]);
-            $stmt_select->execute();
-            $stmt_select->store_result();
-            $stmt_select->bind_result($old_image);
-            $stmt_select->fetch();
-            
-            if (!empty($old_image)) {
-                $old_image_path = "Domain_picture/" . $old_image;
-                if (file_exists($old_image_path)) {
-                    unlink($old_image_path);
-                }
-            }
+        // Update database record with new image (base64) and description information
+        $sql_update = "UPDATE domains SET domain_image = ?, domain_name = ?, domain_description = ? WHERE domain_id = ?";
+        $stmt_update = $conn->prepare($sql_update);
+        $stmt_update->bind_param("sssi", $imageData, $domain, $description, $id);
+        $stmt_update->execute();
 
-            // Update database record with new image and description information
-            $sql_update = "UPDATE domains SET domain_image = ?, domain_name = ?, domain_description = ? WHERE domain_id = ?";
-            $stmt_update = $conn->prepare($sql_update);
-            $stmt_update->bind_param("sssi", $fileName, $_POST["domain"], $description, $_POST["id"]);
-            $stmt_update->execute();
-
-            if ($stmt_update->affected_rows > 0) {
-                echo "Image and Domain Updated Successfully.";
-            } else {
-                echo "Failed to update image and domain in the database.";
-            }
+        if ($stmt_update->affected_rows > 0) {
+            echo '<script type="text/javascript">
+                swal("Update Domain", "Domain has been updated successfully", "success").then((value) => {
+                    window.location.replace("edit.php");
+                });
+            </script>';
         } else {
-            echo "Failed to move uploaded file to directory.";
+            echo '<script type="text/javascript">
+                swal("Update Domain", "Failed to update image and domain in the database.", "error");
+            </script>';
         }
+        // Close the statement
+        $stmt_update->close();
     } else {
         // If no new image file is uploaded, update only the domain name and description
         $sql_update = "UPDATE domains SET domain_name = ?, domain_description = ? WHERE domain_id = ?";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bind_param("ssi", $_POST["domain"], $description, $_POST["id"]);
+        $stmt_update->bind_param("ssi", $domain, $description, $id);
         $stmt_update->execute();
 
         if ($stmt_update->affected_rows > 0) {
-            echo "Domain has been Updated Successfully.";
+            echo '<script type="text/javascript">
+                swal("Update Domain", "Domain has been updated successfully", "success").then((value) => {
+                    window.location.replace("edit.php");
+                });
+            </script>';
         } else {
-            echo "Please make a change to the description, or upload a new image to save changes.";
+            echo '<script type="text/javascript">
+                swal("Update Domain", "Please make a change to the description, or upload a new image to save changes.", "error");
+            </script>';
         }
+        
+
+        // Close the statement
+        $stmt_update->close();
     }
 } else {
     echo "Invalid request method.";

@@ -7,9 +7,6 @@
 
   if($conn->query($sql)){
     
-    //delete image from server
-    unlink("/xampp/htdocs/fyp/Project_title/{$_GET["name"]}");
-    
     //redirect to index page with status = 1
     header("location:upload.php?status=1");
   }else{

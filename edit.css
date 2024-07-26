@@ -13,143 +13,71 @@
     position: relative;
 }
 
+@media (max-width: 768px) {
+    .header {
+        min-height: 15vh;
+    }
+}
+
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
-    background: #f0f0f0;
-}
-
-/* ========================================================================================== */
-
-
-.content {
-    flex: 1;
-}
-
-.content h3 a,  ul li a  {
-    color: #fff !important;
-}
-
-.footer {
-    background-color: #333;
-    color: #fff;
+    min-height: 55vh;
     width: 100%;
     position: relative;
-    bottom: 0;
+    background-image: linear-gradient(rgba(250, 250, 250, 0), rgba(255, 255, 255, 0)), url(Domain_picture/card_background.jpg);
+    background-position: center;
+    background-size: cover;
 }
 
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 0;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-}
-
-.footer-section {
-    flex: 1;
-    padding-left: 500px;
-    min-width: 200px;
-}
-
-.footer-section h3 {
-    margin-bottom: 10px;
-}
-
-.footer-section ul {
-    list-style: none; /* Remove the list-style (dots) from the ul */
-    padding: 13px; /* Remove padding to ensure no extra space */
-}
-
-.footer-section ul li {
-    margin-bottom: 10px;
-    list-style: none; /* Ensure no dots for the li elements */
-}
-
-.footer-section ul li a {
-    color: #fff;
-    text-decoration: none; /* Ensure no underline for the links */
-    transition: color 0.3s ease;
-}
-
-.footer-section ul li a:hover {
-    color: #aaa; /* Darken the color slightly on hover */
-}
-
-.footer-section.social-media ul {
-    display: flex;
-}
-
-.footer-section.social-media ul li {
-    margin-right: 10px;
-}
-
-.footer-section.social-media ul li a {
-    font-size: 24px;
-    color: #fff; /* Ensure social media icons are white */
-}
-
-.footer-bottom {
-    background-color: #222;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-}
-
-.footer-bottom nav ul {
-    list-style: none; /* Remove the list-style (dots) from the ul */
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
-}
-
-.footer-bottom nav ul li {
-    margin: 0 10px;
-    list-style: none; /* Ensure no dots for the li elements */
-}
-
-.footer-bottom nav ul li a {
-    color: #fff;
-    text-decoration: none; /* Ensure no underline for the links */
-}
-
-.footer-bottom nav ul li a:hover {
-    color: #aaa; /* Darken the color slightly on hover */
-}
-
-.separator {
-    color: #fff;
-}
-
-/* to remove bullets from an unordered list */
-ul {
-    list-style: none;
-}
-  
-/* to remove bullets from an ordered list */
-ol {
-    list-style: none; 
-}
-
-
-/* ========================================================================================== */
-/* rgb(241, 70, 2); */
 .bottom {
-    min-height: 100px;
+    min-height: 10vh;
     width: 100%;
-    background-color: #333;
+    background-color:#333;
     background-position: center;
     position: relative;
 }
 
+/*--------------navbar------------------*/
+.hide-icon {
+    visibility: hidden;
+}
+
+.show-icon {
+    visibility: hidden;
+    position: fixed !important;
+    top: 20px; /* Adjust the top position as needed */
+    right: 10px; /* Adjust the right position as needed */
+}
+
+@media (max-width: 768px) {
+    .show-icon {
+        visibility: visible;
+    }
+
+    .hide-icon {
+        visibility: visible;
+    }
+}
 nav {
-    justify-content: center; /* Center the navigation links */
+    display: flex;
     padding: 2% 6%;
     justify-content: space-between;
     align-items: center;
+}
+
+@media (max-width:768px){
+    .nav-links fal fa-times{
+        justify-items: right;
+    }
+
+}
+
+nav img {
+    width: 150px;
+}
+
+.nav-links {
+    flex: 1;
+    text-align: right;
 }
 
 .nav-links ul {
@@ -163,24 +91,9 @@ nav {
 }
 
 .nav-links ul li {
-    padding: 0 12px;
+    display: inline-block;
+    padding: 8px 12px;
     position: relative;
-}
-
-.nav-links ul li:first-child {
-    margin-right: auto; /* Push the logo to the left */
-}
-
-.nav-links ul li:first-child a {
-    padding: 0; /* Remove padding for the logo */
-}
-
-.nav-links ul li:first-child a img {
-    width: 150px;
-}
-
-.nav-links ul li:first-child::after {
-    content: none; /* Remove the orange line under the logo */
 }
 
 .nav-links ul li a,
@@ -188,25 +101,22 @@ nav {
     color: #fff;
     text-decoration: none;
     font-size: 15px;
-    white-space: nowrap; /* Ensure the text does not wrap */
 }
 
-.nav-links ul li:not(:first-child) {
-    margin-left: 0; /* Reset margin to prevent extra spacing */
+.nav-links ul li:first-child {
+    margin-right: auto !important; /* Push the logo to the left */
 }
 
-.nav-links ul li:not(:first-child)::after {
-    content: '';
-    width: 0%;
-    height: 2px;
-    background: #f44336;
-    display: block;
-    margin: auto;
-    transition: 0.5s;
+.nav-links ul li:first-child a {
+    padding: 0 m !important; /* Remove padding for the logo */
 }
 
-.nav-links ul li:not(:first-child):hover::after {
-    width: 100%;
+.nav-links ul li:first-child a img {
+    width: 150px !important;
+}
+
+.nav-links ul li:first-child::after {
+    content: none !important; /* Remove the orange line under the logo */
 }
 
 .nav-links ul li::after {
@@ -221,64 +131,6 @@ nav {
 
 .nav-links ul li:hover::after {
     width: 100%;
-}
-/* Navigation bar styles */
-.nav2 {
-    display: flex;
-    justify-content: center; /* Center the navigation links */
-    padding: 2% 6%;
-    margin-top: 30px;
-    align-items: center;
-    background: #333; /* Background color for the bottom section */
-    color: #fff;
-}
-
-.nav2-links {
-    text-align: center;
-    padding-top: 10px;
-}
-
-.nav2-links ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.nav2-links ul li {
-    display: inline-block;
-    padding: 8px 12px;
-    position: relative;
-}
-
-.nav2-links ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 15px;
-    transition: color 0.3s ease;
-}
-
-.nav2-links ul li::after {
-    content: '';
-    width: 0%;
-    height: 2px;
-    background: #f44336;
-    display: block;
-    margin: auto;
-    transition: width 0.5s;
-}
-
-.nav2-links ul li:hover::after {
-    width: 100%;
-}
-
-.nav2-links ul li:hover a {
-    color: #f44336; /* Change link color on hover */
-}
-
-.separator {
-    color: #fff; /* Color for the separator */
-    padding: 8px 12px;
-    font-size: 15px;
 }
 
 .text-box {
@@ -305,24 +157,32 @@ nav .fa {
     display: none;
 }
 
-@media(max-width: 700px) {
+@media(max-width: 768px) {
+
     .text-box h1 {
         font-size: 20px;
     }
-    .nav-links ul li {
+
+    .nav-links ul{
         display: block;
     }
+
     .nav-links {
         position: absolute;
-        background: #f44336;
-        height: 100vh;
-        width: 200px;
-        top: 0;
-        right: -200px;
-        text-align: left;
-        z-index: 2;
+        background: #333;
+        height: 65vh;
+        width: 100%; /* Full width to cover the screen */
+        top: -100vh; /* Start off-screen at the top */
+        left: 0; /* Ensure it covers the entire width */
+        text-align: center;
+        z-index: 1000; /* Ensure it appears on top */
         transition: 1s;
     }
+
+    .nav-links.active {
+        top: 0 !important;
+    }
+
     nav .fa {
         display: block;
         color: #fff;
@@ -330,48 +190,290 @@ nav .fa {
         font-size: 10px;
         cursor: pointer;
     }
-    .nav-links ul {
-        padding: 30px;
+
+    .nav-links ul li {
+        display: block !important; /* Block display for list items */
+        margin: 20px 0; /* Spacing between items */
+    }
+
+    nav .fa-bars, nav .fa-times {
+        justify-content: right;
+        color: #fff;
+        margin: 10px;
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+}
+/*--------------navbar------------------*/
+
+/*--------------footer------------------*/
+.content {
+    flex: 1;
+}
+
+.content h3 a,  ul li a  {
+    color: #fff !important;
+}
+
+.pagination .page-link {
+    color: #495057 !important;
+}
+
+.pagination .page-item.active .page-link {
+    color: #fff !important;
+}
+
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+}
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.footer-content div {
+    margin: 10px;
+}
+
+@media (max-width: 768px){
+    .footer-content div {
+        flex: 1;
+        margin: 10px;
+        }
+    }
+
+.footer-content h3 {
+    margin-bottom: 10px;
+}
+.footer-content ul {
+    list-style: none;
+    padding: 0;
+}
+.footer-content ul li {
+    margin: 5px 0;
+}
+.footer-content ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+.footer-content .social-media ul {
+    display: flex;
+    padding-left: 0;
+}
+.footer-content .social-media ul li {
+    margin-right: 10px;
+}
+.footer-content .social-media ul li a {
+    font-size: 18px;
+}
+.bottom {
+    text-align: center;
+    padding-top: 10px;
+}
+.nav2-links {
+    margin-top: 20px;
+}
+.nav2-links ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+.nav2-links ul li {
+    margin: 0 10px;
+}
+.nav2-links ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+p{
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 22px;
+    padding: 10px;
+    
+}
+
+.separator {
+    color: #fff;
+}
+/*--------------footer------------------*/
+
+
+/*--------------title------------------*/
+.title-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px; /* This makes the container take up the full height of the viewport */
+}
+/*--------------title------------------*/
+
+
+/*--------------control------------------*/
+
+.row{
+    max-width: 90%;
+    margin-left: 5% !important;
+}
+.new-domain{
+    padding: 0% !important;
+}
+
+@media (max-width:768px) {
+    .row{
+        max-width: 90%;
+        margin: auto;
+    }
+
+    .new-domain{
+        display: flex;
+    }
+
+    .form-control{
+        display: flex;
+        width: 300px !important;
     }
 }
+/*--------------control------------------*/
 
-.container, .container2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 15vh; /* This makes the container take up the full height of the viewport */
-}
 
-.form-input {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 10%;
-    margin-bottom: 1%;
-}
-
-.category {
-    display: flex;
-    justify-content: center;
-    margin: 10px 10; /* Adjust the margin to your liking */
-}
-
-.category select {
-    width: 250px; /* Adjust this value as needed */
-    margin: 0 10px; /* Adjust the margin to your liking */
-}
-
+/*--------------table------------------*/
 .table-container {
+    display: flex;
+    min-height: 100vh;
+    margin:40px;
     justify-content: center;
-    align-items: flex-end; /* Align items at the bottom */
-    margin: 100px;
-    margin-bottom: auto;
 }
 
-.table-container h2 {
-    margin-top: 30px; /* Adjust the margin as needed */
+@media (max-width: 768px) {
+    .table-container  {
+        display: flex;
+    }
+    .table-content{
+        margin:auto !important;
+    }
+}
+.table-content{
+    justify-content: center;
 }
 
+/* Default styles for .input-group */
+#searchGroup {
+    width: auto; /* default width */
+}
+
+/* Media query for max-width 768px */
+@media (max-width: 768px) {
+    #searchGroup {
+        width: 325px;
+        margin: 0 auto; /* optional: centers the element */
+    }
+
+}
+
+/* Default styles for table headers and cells */
+.responsive-table th, .responsive-table td {
+    padding: 8px;
+    text-align: left;
+    align-content: center;
+}
+
+/* Default image styles */
+.responsive-table img {
+    height: 150px;
+    width: 250px;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    /* Ensure the table takes full width */
+    .responsive-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    /* Hide all columns by default */
+    .responsive-table th, .responsive-table td {
+        display: none;
+    }
+
+    /* Show only the Image, Edit, and Delete columns */
+    .responsive-table th:nth-child(2),
+    .responsive-table th:nth-child(5),
+    .responsive-table td:nth-child(2),
+    .responsive-table td:nth-child(5) {
+        display: table-cell;
+    }
+
+    /* Ensure the table rows are block-level for stacking */
+    .responsive-table, .responsive-table thead, .responsive-table tbody, .responsive-table tr {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header styles */
+    .responsive-table th {
+        background-color: #f8f8f8;
+        border-bottom: 1px solid #ddd;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    /* Cell styles */
+    .responsive-table td {
+        position: relative;
+        padding-left: 10px; /* Adjust spacing for readability */
+        border-bottom: 1px solid #ddd;
+        box-sizing: border-box;
+    }
+
+    /* Add labels to cells for visibility */
+    .responsive-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        top: 10px;
+        width: 40%;
+        white-space: nowrap;
+        font-weight: bold;
+        color: #ff4800;
+    }
+
+    /* Ensure domain name appears on top */
+    .responsive-table td:nth-child(2)::before {
+        content: attr(data-label);
+    }
+
+    /* Adjust image styling for responsiveness */
+    .responsive-table img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Add spacing between rows */
+    .responsive-table tr {
+        margin-bottom: 10px;
+    }
+
+    /* Hide table headers on small screens if not needed */
+    .responsive-table thead {
+        display: none;
+    }
+}
+/*--------------table------------------*/
 .pagination {
     display: flex;
     justify-content: center;
@@ -404,20 +506,8 @@ nav .fa {
     color: #fff;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table th {
-    padding: 8px; /* Add padding for table headers */
-    text-align: left;
-    border: none; /* Remove border */
-    background-color: #f0f0f0; /* Add background color */
-}
-
 .table td {
-    max-width: 450px;
+    max-width: 550px;
     padding: 8px; /* Add padding for table cells */
     vertical-align: middle;
     text-align: left; /* Center align the content */
@@ -428,38 +518,82 @@ nav .fa {
 .table .btn {
     padding: 5px 10px; /* Adjust padding to fit the buttons nicely */
     font-size: 14px; /* Adjust font size for better fit */
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 50%;
+}
+/*--------------table------------------*/
+
+/*--------------modal------------------*/
+#addDomainForm {
+    background-color: #f8f9fa; /* Light background for the add domain form */
+    border: 1px solid #ced4da; /* Border around the form */
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 1000px; /* Set a maximum width for better readability */
+    margin: 20px auto; /* Center align the form */
 }
 
-.btn-upload {
-    background-color: blue;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
+#addDomainForm .form-group {
+    margin-bottom: 15px;
 }
 
-.btn-upload:hover {
-    background-color: darkblue;
+#addDomainForm .form-control {
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
 }
 
-/* New styles for form control border */
-.form-control {
-    border: 2px solid #007bff; /* Increase border width and set color */
-    border-radius: 5px; /* Adjust border radius if needed */
-    padding: 10px; /* Add padding */
+#addDomainForm .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
-.form-control:focus {
-    border-color: #0056b3; /* Change border color on focus */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add box shadow on focus */
-    outline: none; /* Remove default outline */
+/* Styles for the Edit Domain Form */
+#editDomainForm {
+    background-color: #ffffff; /* White background for the edit domain form */
+    border: 1px solid #e9ecef; /* Border around the form */
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px; /* Set a maximum width for better readability */
+    margin: 20px auto; /* Center align the form */
 }
 
-p {
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 22px;
+#editDomainForm .form-group {
+    margin-bottom: 15px;
 }
+
+#editDomainForm .form-control {
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+#editDomainForm #editImage {
+    width: 100%; /* Make sure the image scales well */
+    object-fit: cover; /* Ensure the image covers the area without stretching */
+}
+
+/* Optional: Styles for form labels */
+#addDomainForm label,
+#editDomainForm label {
+    font-weight: bold;
+}
+
+/* Responsive Styles for screens with a maximum width of 768px */
+@media (max-width: 768px) {
+    #editDomainForm {
+        max-width: 100%; /* Make the form full-width on smaller screens */
+        padding: 15px; /* Adjust padding */
+    }
+
+    #editDomainForm .form-group {
+        margin-bottom: 10px; /* Reduce margin */
+    }
+
+    #editDomainForm .form-control {
+        font-size: 14px; /* Adjust font size for readability */
+    }
+    #editDomainForm #editImage {
+        height: auto; /* Adjust image height for very small screens */
+    }
+}
+/*--------------modal------------------*/
