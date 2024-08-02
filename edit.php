@@ -9,16 +9,19 @@ if (!$conn) {
 
 // Check if the user is an admin
 $isAdmin = false;
+$isStaff = false;
+
 if (isset($_SESSION['login_user_id'])) {
     $userId = $_SESSION['login_user_id'];
     $sql = "SELECT user_role FROM user WHERE user_id = '$userId'";
     $result = mysqli_query($conn, $sql);
+
     if ($result) {
         $row = mysqli_fetch_assoc($result); 
         $isAdmin = ($row['user_role'] === 'Admin');
+        $isStaff = ($row['user_role'] === 'Staff');
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -30,9 +33,9 @@ if (isset($_SESSION['login_user_id'])) {
     <link rel="stylesheet" href="edit.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- SweetAlert CSS -->
@@ -129,210 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 }
 ?>
 
-<!-- MY PROFILE MODAL -->
-<div id="myProfileModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">My Profile</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form class="menu_form" id="profileForm" method="POST" action="home.php" onsubmit="return validatePassword();">
-                    <input type="hidden" name="user_id" value="<?php echo $_SESSION['login_user_id']; ?>">
-                    <div class="form-group">
-                        <label for="full_name">Full Name</label>
-                        <input type="text" class="form-control" name="full_name" id="full_name" value="<?php echo $_SESSION['login_user']; ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="user_email">Email</label>
-                        <input type="email" class="form-control" name="user_email" id="user_email" value="<?php echo $_SESSION['login_email']; ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="user_role">User Role</label>
-                        <select class="form-control" name="user_role" id="user_role" required>
-                            <option value="Staff" <?php echo isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Staff' ? 'selected' : ''; ?>>Staff</option>
-                            <option value="Admin" <?php echo isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="user_password">New Password (Optional)</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" name="user_password" id="user_password">
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="fa fa-eye toggle-password" toggle="#user_password"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="re_user_password">Re-Enter Password</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" name="re_user_password" id="re_user_password">
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="fa fa-eye toggle-password" toggle="#re_user_password"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="password-criteria">
-                        <ul style="padding-left: 0;">
-                            <li id="8char" class="glyphicon glyphicon-remove"> 8 Characters Long</li>
-                            <li id="ucase" class="glyphicon glyphicon-remove"> One Uppercase Letter</li>
-                            <li id="lcase" class="glyphicon glyphicon-remove"> One Lowercase Letter</li>
-                            <li id="num" class="glyphicon glyphicon-remove"> One Number</li>
-                            <li id="pwmatch" class="glyphicon glyphicon-remove"> Passwords Match</li>
-                        </ul>
-                    </div>
-                    <button type="submit" name="update_profile_sbmt" class="btn btn-primary btn-block">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>  
-
-<script>
-    $(document).ready(function() {
-        // Check for login error
-        if (localStorage.getItem('loginError') === 'true') {
-            $('#loginModal').modal('show');
-            localStorage.removeItem('loginError');
-        }
-
-        // Check for forgot password errors
-        if (localStorage.getItem('passwordResetError') === 'true') {
-            $('#forgotPasswordModal').modal('show');
-            localStorage.removeItem('passwordResetError');
-        }
-
-        // Check for forgot password success
-        if (localStorage.getItem('passwordResetSuccess') === 'true') {
-            $('#forgotPasswordModal').modal('show');
-            localStorage.removeItem('passwordResetSuccess');
-        }
-
-
-        $(".toggle-password").click(function () {
-            $(this).toggleClass("fa-eye fa-eye-slash");
-            var input = $($(this).attr("toggle"));
-            if (input.attr("type") == "password") {
-                input.attr("type", "text");
-            } else {
-                input.attr("type", "password");
-            }
-        });
-
-        window.showLoginModal = function() {
-            $('#loginModal').modal('show');
-        }
-
-        window.hideLoginModal = function() {
-            $('#loginModal').modal('hide');
-        }
-
-        window.showForgotPasswordModal = function() {
-            $('#forgotPasswordModal').modal('show');
-            $('#loginModal').modal('hide');
-        }
-
-        window.hideForgotPasswordModal = function() {
-            $('#forgotPasswordModal').modal('hide');
-        }  
-        
-        $("input[type=password]").keyup(function() {
-            var ucase = new RegExp("[A-Z]+");
-            var lcase = new RegExp("[a-z]+");
-            var num = new RegExp("[0-9]+");
-
-            if ($("#user_password").val().length >= 8) {
-                $("#8char").removeClass("glyphicon-remove");
-                $("#8char").addClass("glyphicon-ok");
-                $("#8char").css("color", "#00A41E");
-            } else {
-                $("#8char").removeClass("glyphicon-ok");
-                $("#8char").addClass("glyphicon-remove");
-                $("#8char").css("color", "#FF0004");
-            }
-
-            if (ucase.test($("#user_password").val())) {
-                $("#ucase").removeClass("glyphicon-remove");
-                $("#ucase").addClass("glyphicon-ok");
-                $("#ucase").css("color", "#00A41E");
-            } else {
-                $("#ucase").removeClass("glyphicon-ok");
-                $("#ucase").addClass("glyphicon-remove");
-                $("#ucase").css("color", "#FF0004");
-            }
-
-            if (lcase.test($("#user_password").val())) {
-                $("#lcase").removeClass("glyphicon-remove");
-                $("#lcase").addClass("glyphicon-ok");
-                $("#lcase").css("color", "#00A41E");
-            } else {
-                $("#lcase").removeClass("glyphicon-ok");
-                $("#lcase").addClass("glyphicon-remove");
-                $("#lcase").css("color", "#FF0004");
-            }
-
-            if (num.test($("#user_password").val())) {
-                $("#num").removeClass("glyphicon-remove");
-                $("#num").addClass("glyphicon-ok");
-                $("#num").css("color", "#00A41E");
-            } else {
-                $("#num").removeClass("glyphicon-ok");
-                $("#num").addClass("glyphicon-remove");
-                $("#num").css("color", "#FF0004");
-            }
-
-            if ($("#user_password").val() === $("#re_user_password").val()) {
-                $("#pwmatch").removeClass("glyphicon-remove");
-                $("#pwmatch").addClass("glyphicon-ok");
-                $("#pwmatch").css("color", "#00A41E");
-            } else {
-                $("#pwmatch").removeClass("glyphicon-ok");
-                $("#pwmatch").addClass("glyphicon-remove");
-                $("#pwmatch").css("color", "#FF0004");
-            }
-        });
-
-        // Existing functionality
-        // ...
-
-        window.showProfileModal = function() {
-            $('#myProfileModal').modal('show');
-        }
-    });
-
-    function validatePassword() {
-        var password = document.getElementById("user_password").value;
-        var rePassword = document.getElementById("re_user_password").value;
-
-        if (password === "" && rePassword === "") {
-            return true;
-        }
-
-        if (password !== rePassword) {
-            alert("Passwords do not match.");
-            return false;
-        }
-
-        var ucase = new RegExp("[A-Z]+");
-        var lcase = new RegExp("[a-z]+");
-        var num = new RegExp("[0-9]+");
-
-        if (password.length >= 8 && ucase.test(password) && lcase.test(password) && num.test(password)) {
-            return true;
-        } else {
-            alert("Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, and one number.");
-            return false;
-        }
-    };
-</script>
-
 <section class="header">
     <nav>
         <div class="nav-links" id="navLinks">
@@ -347,8 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
-                    <li><a href="edit.php">Domain</a></li>
-                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="edit.php">Manage Domain</a></li>
+                    <li><a href="upload.php">Manage Project</a></li>
                     <li><a href="logout.php">Sign out</a></li>
                 <?php else: ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -361,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 </section>
 
 <div class="title-text">
-    <h1>Edit Domains</h1>
+    <h1>Manage Domain</h1>
 </div>
 
 
@@ -438,10 +237,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
             }
             ?>
             
+            <?php
+            if (isset($_SESSION['delete_message'])) {
+                echo "<div class='alert alert-success'>" . $_SESSION['delete_message'] . "</div>";
+                unset($_SESSION['delete_message']); // Clear the session variable after displaying the message
+            }
+            ?>
+            
             <!-- Form for adding a new domain and uploading an image -->
             <form id="addDomainForm" method="post" action="edit.php" enctype="multipart/form-data">
                 <?php echo isset($message) ? $message : ''; ?>
-                <div class="form-group">
+                <div class="form-group1">
                     <label>New Domain Name</label>
                     <input type="text" name="new_domain" class="form-control">
                 </div>
@@ -649,8 +455,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
     <script>
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
@@ -673,7 +478,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
         var formData = new FormData(this);
 
         $.ajax({
-    url: 'image_update.php',
+    url: 'domain_update.php',
     type: 'POST',
     data: formData,
     contentType: false,
@@ -788,7 +593,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 
             // Smooth scroll to top
             $('#backToTopBtn').click(function() {
-                $('html, body').animate({scrollTop: 0}, 400);
+                $('html, body').animate({scrollTop: 0}, 10);
                 return false;
             });
 
@@ -812,6 +617,210 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 });
 </script>
 
+
+<!-- MY PROFILE MODAL -->
+<div id="myProfileModal" id="editModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">My Profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="menu_form" id="profileForm" method="POST" action="home.php" onsubmit="return validatePassword();">
+                    <input type="hidden" name="user_id" value="<?php echo $_SESSION['login_user_id']; ?>">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" class="form-control" name="full_name" id="full_name" value="<?php echo $_SESSION['login_user']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_email">Email</label>
+                        <input type="email" class="form-control" name="user_email" id="user_email" value="<?php echo $_SESSION['login_email']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_role">User Role</label>
+                        <select class="form-control" name="user_role" id="user_role" required>
+                            <option value="Staff" <?php echo isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Staff' ? 'selected' : ''; ?>>Staff</option>
+                            <option value="Admin" <?php echo isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_password">New Password (Optional)</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="user_password" id="user_password">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-eye toggle-password" toggle="#user_password"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="re_user_password">Re-Enter Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="re_user_password" id="re_user_password">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-eye toggle-password" toggle="#re_user_password"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="password-criteria">
+                        <ul style="padding:0;">
+                            <li id="8char" class="glyphicon glyphicon-remove"> 8 Characters Long</li>
+                            <li id="ucase" class="glyphicon glyphicon-remove"> One Uppercase Letter</li>
+                            <li id="lcase" class="glyphicon glyphicon-remove"> One Lowercase Letter</li>
+                            <li id="num" class="glyphicon glyphicon-remove"> One Number</li>
+                            <li id="pwmatch" class="glyphicon glyphicon-remove"> Passwords Match</li>
+                        </ul>
+                    </div>
+                    <button type="submit" name="update_profile_sbmt" class="btn btn-primary btn-block">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<script>
+    $(document).ready(function() {
+        // Check for login error
+        if (localStorage.getItem('loginError') === 'true') {
+            $('#loginModal').modal('show');
+            localStorage.removeItem('loginError');
+        }
+
+        // Check for forgot password errors
+        if (localStorage.getItem('passwordResetError') === 'true') {
+            $('#forgotPasswordModal').modal('show');
+            localStorage.removeItem('passwordResetError');
+        }
+
+        // Check for forgot password success
+        if (localStorage.getItem('passwordResetSuccess') === 'true') {
+            $('#forgotPasswordModal').modal('show');
+            localStorage.removeItem('passwordResetSuccess');
+        }
+
+
+        $(".toggle-password").click(function () {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+
+        window.showLoginModal = function() {
+            $('#loginModal').modal('show');
+        }
+
+        window.hideLoginModal = function() {
+            $('#loginModal').modal('hide');
+        }
+
+        window.showForgotPasswordModal = function() {
+            $('#forgotPasswordModal').modal('show');
+            $('#loginModal').modal('hide');
+        }
+
+        window.hideForgotPasswordModal = function() {
+            $('#forgotPasswordModal').modal('hide');
+        }  
+        
+        $("input[type=password]").keyup(function() {
+            var ucase = new RegExp("[A-Z]+");
+            var lcase = new RegExp("[a-z]+");
+            var num = new RegExp("[0-9]+");
+
+            if ($("#user_password").val().length >= 8) {
+                $("#8char").removeClass("glyphicon-remove");
+                $("#8char").addClass("glyphicon-ok");
+                $("#8char").css("color", "#00A41E");
+            } else {
+                $("#8char").removeClass("glyphicon-ok");
+                $("#8char").addClass("glyphicon-remove");
+                $("#8char").css("color", "#FF0004");
+            }
+
+            if (ucase.test($("#user_password").val())) {
+                $("#ucase").removeClass("glyphicon-remove");
+                $("#ucase").addClass("glyphicon-ok");
+                $("#ucase").css("color", "#00A41E");
+            } else {
+                $("#ucase").removeClass("glyphicon-ok");
+                $("#ucase").addClass("glyphicon-remove");
+                $("#ucase").css("color", "#FF0004");
+            }
+
+            if (lcase.test($("#user_password").val())) {
+                $("#lcase").removeClass("glyphicon-remove");
+                $("#lcase").addClass("glyphicon-ok");
+                $("#lcase").css("color", "#00A41E");
+            } else {
+                $("#lcase").removeClass("glyphicon-ok");
+                $("#lcase").addClass("glyphicon-remove");
+                $("#lcase").css("color", "#FF0004");
+            }
+
+            if (num.test($("#user_password").val())) {
+                $("#num").removeClass("glyphicon-remove");
+                $("#num").addClass("glyphicon-ok");
+                $("#num").css("color", "#00A41E");
+            } else {
+                $("#num").removeClass("glyphicon-ok");
+                $("#num").addClass("glyphicon-remove");
+                $("#num").css("color", "#FF0004");
+            }
+
+            if ($("#user_password").val() === $("#re_user_password").val()) {
+                $("#pwmatch").removeClass("glyphicon-remove");
+                $("#pwmatch").addClass("glyphicon-ok");
+                $("#pwmatch").css("color", "#00A41E");
+            } else {
+                $("#pwmatch").removeClass("glyphicon-ok");
+                $("#pwmatch").addClass("glyphicon-remove");
+                $("#pwmatch").css("color", "#FF0004");
+            }
+        });
+
+        // Existing functionality
+        // ...
+
+        window.showProfileModal = function() {
+            $('#myProfileModal').modal('show');
+        }
+    });
+
+    function validatePassword() {
+        var password = document.getElementById("user_password").value;
+        var rePassword = document.getElementById("re_user_password").value;
+
+        if (password === "" && rePassword === "") {
+            return true;
+        }
+
+        if (password !== rePassword) {
+            alert("Passwords do not match.");
+            return false;
+        }
+
+        var ucase = new RegExp("[A-Z]+");
+        var lcase = new RegExp("[a-z]+");
+        var num = new RegExp("[0-9]+");
+
+        if (password.length >= 8 && ucase.test(password) && lcase.test(password) && num.test(password)) {
+            return true;
+        } else {
+            alert("Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, and one number.");
+            return false;
+        }
+    };
+</script>
 
 </body>
 </html>

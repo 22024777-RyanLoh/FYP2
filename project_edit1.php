@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $semester = $_POST['semester'] ?? '';
 
     // Update project details
-    $stmt = $conn->prepare("UPDATE project SET Project_title = ?, Project_body = ?, Organisation = ?, Members = ?, Supervisor = ?, domain_id = ?, Project_year = ?, Project_semester = ? WHERE Project_ID = ?");
+    $stmt = $conn->prepare("UPDATE project SET Project_title = ?, Project_body = ?, Organisation = ?, Members = ?, Supervisor = ?, domain_id = ?, year_id = ?, Project_semester = ? WHERE Project_ID = ?");
     $stmt->bind_param("ssssssisi", $title, $body, $organisation, $members, $supervisor, $domain, $year, $semester, $id);
     $stmtExecuted = $stmt->execute();
     $stmt->close();
@@ -89,18 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmtDesc->close();
         
-        // Check for new images to upload
-        $stmtImg = $conn->prepare("UPDATE project_image SET Project_image = ? WHERE Image_ID = ?");
-        foreach ($imageIds as $index => $imageId) {
-            if (isset($_FILES['new_image_' . ($index + 1)]) && $_FILES['new_image_' . ($index + 1)]['error'] == UPLOAD_ERR_OK) {
-                $imageTmpPath = $_FILES['new_image_' . ($index + 1)]['tmp_name'];
-                $base64Image = base64_encode(file_get_contents($imageTmpPath));
-                
-                $stmtImg->bind_param("si", $base64Image, $imageId);
-                $stmtImgExecuted = $stmtImg->execute() && $stmtImgExecuted;
-            }
-        }
-        $stmtImg->close();
     }
 
     // Process new images

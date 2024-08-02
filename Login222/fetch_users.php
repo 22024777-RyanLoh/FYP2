@@ -79,12 +79,71 @@ foreach ($users as $user) {
     echo "</td>";
     echo "<td class='{$boldClass}'>{$user['user_role']}</td>";
     echo "<td>";
-    echo "<a href='users.php?do=Edit&user_id={$user['user_id']}' class='btn btn-success btn-sm rounded-0'><i class='fa fa-edit'></i></a> ";
-    echo "<a href='users.php?do=Delete&user_id={$user['user_id']}' class='btn btn-danger btn-sm rounded-0' onclick='return confirm(\"Are you sure you want to delete this user?\");'><i class='fa fa-trash'></i></a>";
-    echo "</td>";
+    echo "<a href='users.php?do=Edit&user_id={$user['user_id']}' class='btn btn-success btn-sm'><i class='fa fa-edit' style='font-weight: 900; font-family: \"Font Awesome 5 Free\"; font-style: normal; font-variant: normal;'></i></a> ";
+    if ($user['user_id'] == $currentUserId) {
+        echo "<button class='btn btn-danger btn-sm' onclick='forbidDeletion(); return false;'>";
+        echo "<i class='fa fa-trash' style='font-weight: 900; font-family: \"Font Awesome 5 Free\"; font-style: normal; font-variant: normal;'></i>";
+        echo "</button>";
+    } else {
+        echo "<button class='btn btn-danger btn-sm' onclick='confirmDeletion(" . $user['user_id'] . "); return false;'>";
+        echo "<i class='fa fa-trash' style='font-weight: 900; font-family: \"Font Awesome 5 Free\"; font-style: normal; font-variant: normal;'></i>";
+        echo "</button>";
+    }    echo "</td>";
     echo "</tr>";
     $i++;
 }
 
 $conn->close();
 ?>
+
+<script>
+    function confirmDeletion(userId) {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success custom-swal-button ml-3',  // Add left margin to the confirm button
+            cancelButton: 'btn btn-danger custom-swal-button'  // Add custom class for the cancel button
+        },
+        buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+        title: 'Are you sure you want to delete this user?',
+        text: "This action cannot be undone.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'users.php?do=Delete&user_id=' + userId;
+        }
+    });
+}
+    function forbidDeletion() {
+        Swal.fire({
+            title: 'Action Forbidden',
+            text: 'You cannot delete your own account.',
+            icon: 'error',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'OK'
+        });
+    }
+</script>
+
+<!-- Add custom styles for the buttons -->
+<style>
+    .custom-swal-button {
+        margin: 0 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.25;
+        border-radius: 0.25rem;
+        transition: all 0.15s ease-in-out;
+    }
+
+    .ml-3 {
+        margin-left: 15px !important;
+    }
+</style>

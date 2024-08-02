@@ -306,80 +306,117 @@ p{
 }
 /*--------------footer------------------*/
 
+
 /*--------------user.php search bar------------------*/
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 @media (max-width: 768px) {
-    .card {
-        display: block;
+    .card-header {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center items horizontally */
     }
-    .d-flex {
-        display:block;
-        flex-wrap: wrap;
+
+    .card-header .d-flex {
+        flex-direction: column; /* Stack inner items vertically */
+        align-items: center; /* Center items horizontally */
+        width: 100%; /* Ensure it takes full width */
     }
-    .ml-3 {
-        margin-top: 40px;
+
+    .card-header .input-group-append {
+        margin-top: 10px; /* Add spacing between buttons and other elements */
     }
+
+    .card-header .form-check {
+        margin-top: 10px; /* Add spacing between checkbox and other elements */
+    }
+
+    .card-header .d-flex select {
+        width: auto; /* Adjust select width */
+    }
+
     .form-control {
+        display: flex;
         width: 100%;
     }
 
-    .input-group-append {
-        margin-top: 45px;
+    .btn-primary{
+        width: 40% !important
     }
-    .form-check {
-        margin-top: 5px;
+
+    .btn-primary.mb-2{
+        width: 100% !important;
+        margin-right: 10px !important;
     }
-    .pagination {
-        margin-top: 10px;
-    }
-    .custom-select {
-        width: 100%;
-        margin-top: 5px;
-    }
+
 }
+
+
 /*--------------user.php search bar------------------*/
 
 /*--------------user.php table------------------*/
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
 @media (max-width: 768px) {
-    .card-body{
-        margin: auto;
+    .card-body {
+        padding: 10px; /* Adjust padding */
     }
-    .table thead {
-        display: none;
-    }
-    
-    .table, .table tbody, .table tr, .table td {
+
+    .table {
+        overflow-x: auto; /* Enable horizontal scrolling */
         display: block;
+        text-align: center; /* Center-align table text */
+    }
+
+    .table thead {
+        display: none; /* Hide table headers on smaller screens */
+    }
+
+    .table tbody, .table tr {
+        display: block; /* Display rows as block elements */
         width: 100%;
     }
-    .table tr {
-        margin-bottom: 15px;
-    }
+
     .table td {
-        text-align: left;
-        position: relative;
+        display: block; /* Display table cells as block elements */
+        text-align: center; /* Center-align cell text */
     }
-    .table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0;
-        width: 50%;
-        padding-left: 15px;
-        font-weight: bold;
-        text-align: left;
+
+    .d-flex {
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center items horizontally */
+        width: 100%; /* Full width for better alignment */
     }
-    .table td.no, .table td.fullname, .table td.role {
-        display: none;
+
+    .d-flex > div, .pagination {
+        margin-top: 10px; /* Add spacing between elements */
     }
-    .btn {
-        display: inline-block;
-        width: 48%;
-        margin-bottom: 5px;
+
+    .custom-select {
+        width: auto; /* Adjust width for select box */
     }
-    
+
+    th:nth-child(1), td:nth-child(1) {
+        width: 100% !important;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+        width: 100% !important;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+        width: 100% !important;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
+        width: 100% !important;
+    }
+
+    th:nth-child(5), td:nth-child(5) {
+        width: 100% !important;
+    }
+
 }
 /*--------------user.php table------------------*/
 
@@ -439,7 +476,7 @@ p{
         justify-content: center; /* Center-align button */
     }
 
-    .form-group {
+    .form-group.mb-2 {
         width: 100%; /* Full width for form groups */
         margin-bottom: 15px; /* Space between form groups */
     }
@@ -452,7 +489,7 @@ p{
 
     .input-group .input-group-append {
         align-items: center;
-        margin-bottom: 45px;
+
     }
 
     .password-criteria {
@@ -480,3 +517,123 @@ p{
 }
 
 /*--------------user.php edituser------------------*/
+
+@media (max-width:768px){
+    
+    .table responsive-table {
+        
+        display: flex !important;
+        
+}
+}
+
+.table responsive-table{
+    width: 1000px;
+}
+
+
+/*--------------dashboard year table------------------*/
+@media (max-width: 768px) {
+
+    .table-content {
+        width: 100%;
+        padding: 0 15px;
+    }
+    .d-flex.align-items-center.flex-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .d-flex.align-items-center.flex-column.w-100 {
+        width: 100%;
+    }
+    h2.mr-3 {
+        margin-right: 0;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    .form-inline {
+        margin:auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .form-group.mb-2 {
+        margin-bottom: 15px;
+    }
+   
+    .btn-primary.mb-2.ml-2 {
+        margin-left: 0;
+    }
+
+    .table.responsive-table.table thead, .table tbody, .table th, .table td, .table tr { 
+        display: block; 
+    }
+
+    .table.responsive-table.table tr {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table.responsive-table.table td, .table.responsive-table.table th {
+        width: 100%;
+        text-align: right;
+    }
+
+    .table.responsive-table.table.responsive-table.table th {
+        display: none;
+    }
+
+    .table.responsive-table2.table td, .table.responsive-table.table th {
+        width: 100%;
+        text-align: center;
+    }
+
+    .table.responsive-table2.table td {
+        text-align: center;
+    }
+
+    .table td{
+        text-align: center;
+    }
+
+    .table.responsive-table.table td::before {
+        content: attr(data-label); /* Use data-label to show the header above each cell */
+        font-weight: bold; /* Make header labels bold */
+        display: block; /* Make labels block elements */
+        margin-bottom: 5px; /* Space between label and cell content */
+        color:#333;
+        text-align: left;
+    }
+
+    .table td input[type="checkbox"], .table td button {
+        margin: 0 auto;
+    }
+
+    .delete-year {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px; /* Reduce padding for smaller buttons */
+        width: 40%;
+    }
+
+    .delete-year i {
+        margin: 0;
+        font-size: 0.8rem; /* Reduce font size for smaller icon */
+        width: 50%;
+
+    }
+
+    .btn.btn-danger.delete-year{
+        margin-left:auto;
+    }
+
+}
+
+

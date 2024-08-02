@@ -9,7 +9,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
 
-$pageTitle = 'Add and Manage Users';
+$pageTitle = 'Manage User';
 
 // Check if the user is an admin
 $isAdmin = false;
@@ -33,8 +33,11 @@ if (isset($_SESSION['login_user'])) {
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../footer.css">
+
+    
     <!-- SweetAlert CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <!-- jQuery -->
@@ -247,6 +250,60 @@ function validatePassword() {
         .swal2-confirm {
         background-color: #8CD4F5 !important; /* Original blue color */
         }
+        .btn-success{
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+        .fa1 {
+            display: inline-block;
+            font: normal !important;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        #backToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #555;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        #backToTopBtn:hover {
+            background-color: #000;
+        }
+        table {
+            table-layout: fixed;
+        }
+      
+        th:nth-child(1), td:nth-child(1) {
+            width: 5%;
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            width: 30%;
+        }
+
+        th:nth-child(3), td:nth-child(3) {
+            width: 30%;
+        }
+
+        th:nth-child(4), td:nth-child(4) {
+            width: 6%;
+        }
+
+        th:nth-child(5), td:nth-child(5) {
+            width: 8%;
+        }
     </style>
 
     <!-- navbar -->
@@ -268,8 +325,8 @@ function validatePassword() {
                             </a></li>
                             <li><a href="../login222/users.php">Admin Panel</a></li>
                         <?php endif; ?>
-                        <li><a href="../edit.php">Domain</a></li>
-                        <li><a href="../upload.php">Project</a></li>
+                        <li><a href="../edit.php">Manage Domain</a></li>
+                        <li><a href="../upload.php">Manage Project</a></li>
                         <li><a href="logout.php">Sign out</a></li>
                     <?php else: ?>
                         <li><a href="../home.php"><img src="../Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -283,15 +340,26 @@ function validatePassword() {
 
     <!-- START BODY CONTENT  -->
 
-<div id="content"> 
-    <section class="content-wrapper" style="width: 100%;padding: 70px 0 0;">
-        <div class="inside-page" style="padding:20px">
-            <div class="page_title_top" style="margin-bottom: 1.5rem!important;">
-                <h1 style="color: #5a5c69!important;font-size: 1.75rem;font-weight: 400;line-height: 1.2;">
+    <div id="content"> 
+    <section class="content-wrapper" style="width: 100%;">
+        <div class="inside-page" style="padding-bottom: 40px;">
+            <div class="page_title_top" style="text-align: center;">
+                <h1 style="color: #212529!important;font-size: 2.5rem;font-weight: 500;">
                     <?php echo $pageTitle; ?>
                 </h1>
+            </div>
+        </div>
     </section>
-</div>
+</div>     
+
+<style>
+    .inside-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 140px;
+    }
+</style>
 
 <?php
 $do = isset($_GET['do']) ? htmlspecialchars($_GET['do']) : 'Manage';
@@ -318,7 +386,7 @@ if ($do == "Manage") {
         <div class="d-flex align-items-center">
             <?php echo "$pageTitle"; ?>
             <div class="d-flex ml-3">
-                <label type="text" class="form-control-plaintext" id="searchBoxLabel" for="searchBox">
+                <label type="text" class="form-control-plaintext" id="searchBoxLabel" for="searchBox" style="margin-right: 10px; text-align:center;">
                     Filter rows:
                 </label>
                 <input type="text" class="form-control ml-2" placeholder="Search" id="searchBox">
@@ -339,7 +407,7 @@ if ($do == "Manage") {
             </div>
             <!-- Filter by User Role -->
             <div class="d-flex ml-3">
-                <label for="filterRole" class="form-control-plaintext" style="margin-right: 10px;">
+                <label for="filterRole" class="form-control-plaintext" style="margin-right: 10px; text-align:center;">
                     Filter by role:
                 </label>
             </div>
@@ -368,6 +436,7 @@ if ($do == "Manage") {
             <tbody>
                 <?php
                 $i = ($page - 1) * $limit + 1;
+                // Inside the table row rendering loop for Manage
                 foreach ($users as $user) {
                     $boldClass = ($user['user_id'] == $currentUserId) ? 'bold' : '';
                     echo "<tr>";
@@ -388,13 +457,22 @@ if ($do == "Manage") {
                     echo "<a href='users.php?do=Edit&user_id=" . $user['user_id'] . "' class='btn btn-success btn-sm rounded-0'>";
                     echo "<i class='fa fa-edit'></i>";
                     echo "</a> ";
-                    echo "<a href='users.php?do=Delete&user_id=" . $user['user_id'] . "' class='btn btn-danger btn-sm rounded-0' onclick='return confirm(\"Are you sure you want to delete this user?\");'>";
-                    echo "<i class='fa fa-trash'></i>";
-                    echo "</a>";
+                    if ($user['user_id'] == $currentUserId) {
+                        echo "<button class='btn btn-danger btn-sm rounded-0' onclick='forbidDeletion(); return false;'>";
+                        echo "<i class='fa fa-trash'></i>";
+                        echo "</button>";
+                    } else {
+                        echo "<button class='btn btn-danger btn-sm rounded-0' onclick='confirmDeletion(" . $user['user_id'] . "); return false;'>";
+                        echo "<i class='fa fa-trash'></i>";
+                        echo "</button>";
+                    }
                     echo "</td>";
                     echo "</tr>";
                     $i++;
                 }
+                
+
+
                 ?>
             </tbody>
         </table>
@@ -414,7 +492,7 @@ if ($do == "Manage") {
                     <?php
                     if ($total_pages > 1) {
                         if ($page > 1) {
-                            echo '<li class="page-item"><a class="page-link" href="#" onclick="loadPage(' . ($page - 1) . ')">Previous</a></li>';
+                            echo '<li class="page-item"><a class="page-link" style="color: black" href="#" onclick="loadPage(' . ($page - 1) . ')">Previous</a></li>';
                         }
 
                         for ($i = 1; $i <= $total_pages; $i++) {
@@ -431,6 +509,8 @@ if ($do == "Manage") {
         </div>
     </div>
 </div>
+
+
 
         <?php
     } elseif ($do == 'Add') {
@@ -534,10 +614,18 @@ if ($do == "Manage") {
         ?> 
                 <!-- SUCCESS MESSAGE -->
                 <script type="text/javascript">
-                    swal("Add User", "User has been added successfully", "success").then((value) => {
-                        window.location.replace("users.php");
+                    Swal.fire({
+                        title: 'Add User',
+                        text: 'User has been added successfully',
+                        icon: 'success',
+                        confirmButtonColor: '#8CD4F5'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.replace("users.php");
+                        }
                     });
                 </script>
+
         <?php
             } catch (Exception $e) {
                 echo 'Error occurred: ' . $e->getMessage();
@@ -556,10 +644,18 @@ if ($do == "Manage") {
         ?> 
                 <!-- SUCCESS MESSAGE -->
                 <script type="text/javascript">
-                    swal("Delete User", "User has been deleted successfully", "success").then((value) => {
-                        window.location.replace("users.php");
+                    Swal.fire({
+                        title: 'Delete User',
+                        text: 'User has been deleted successfully',
+                        icon: 'success',
+                        confirmButtonColor: '#8CD4F5'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.replace("users.php");
+                        }
                     });
                 </script>
+
         <?php
             } catch (Exception $e) {
                 echo 'Error occurred: ' . $e->getMessage();
@@ -578,10 +674,10 @@ if ($do == "Manage") {
             $count = $stmt->rowCount();
             if ($count > 0) {
                 $isCurrentUser = $user_id == $_SESSION['login_user_id'];
-        ?>
-
+    ?>
+    
                 <div class="card">
-                    <div class="card-header">Edit User</div>
+                    <div class="card-header" style="text-align:center;">Edit User</div>
                     <div class="card-body">
                         <form method="POST" class="menu_form" action="users.php?do=Edit&user_id=<?php echo $user['user_id'] ?>" onsubmit="return <?php echo $isCurrentUser ? 'validatePassword()' : 'true'; ?>">
                             <div class="panel-X">
@@ -602,28 +698,31 @@ if ($do == "Manage") {
                                 <div class="panel-body-X">
                                     <!-- User ID -->
                                     <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-
+    
                                     <!-- FULL NAME INPUT -->
                                     <div class="form-group">
                                         <label for="full_name">Full Name</label>
                                         <input type="text" class="form-control" value="<?php echo $user['user_fullname'] ?>" placeholder="Full Name" name="full_name" required>
                                     </div>
-
+    
                                     <!-- User Email INPUT with Validation -->
                                     <div class="form-group">
                                         <label for="user_email">User E-mail</label>
                                         <input type="email" class="form-control" value="<?php echo $user['email'] ?>" placeholder="User Email" name="user_email" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" title="Invalid email address. You are missing an '@' and '.' in your email.">
                                     </div>
-
+    
                                     <!-- User Role INPUT -->
                                     <div class="form-group">
                                         <label for="user_role">User Role</label>
-                                        <select class="form-control" name="user_role" id="user_role" required>
+                                        <select class="form-control" name="user_role" id="user_role" <?php echo $isCurrentUser ? 'disabled' : ''; ?> required>
                                             <option value="Staff" <?php echo isset($user['user_role']) && $user['user_role'] == 'Staff' ? 'selected' : ''; ?>>Staff</option>
                                             <option value="Admin" <?php echo isset($user['user_role']) && $user['user_role'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
                                         </select>
+                                        <?php if ($isCurrentUser): ?>
+                                            <input type="hidden" name="user_role" value="<?php echo $user['user_role']; ?>">
+                                        <?php endif; ?>
                                     </div>
-
+    
                                     <!-- User Password INPUT -->
                                     <?php if ($isCurrentUser) : ?>
                                         <div class="form-group">
@@ -637,7 +736,7 @@ if ($do == "Manage") {
                                                 </div>
                                             </div>
                                         </div>
-
+    
                                         <!-- Re-Enter Password INPUT -->
                                         <div class="form-group">
                                             <label for="re_user_password">Re-Enter Password</label>
@@ -650,7 +749,7 @@ if ($do == "Manage") {
                                                 </div>
                                             </div>
                                         </div>
-
+    
                                         <!-- Password Criteria -->
                                         <div class="password-criteria">
                                             <ul>
@@ -673,7 +772,7 @@ if ($do == "Manage") {
                                                 </div>
                                             </div>
                                         </div>
-
+    
                                         <div class="form-group">
                                             <label for="re_user_password">Re-Enter Password (Disabled)</label>
                                             <div class="input-group">
@@ -686,7 +785,7 @@ if ($do == "Manage") {
                                             </div>
                                         </div>
                                     <?php endif; ?>
-
+    
                                 </div>
                             </div>
                         </form>
@@ -706,6 +805,33 @@ if ($do == "Manage") {
         function hidemenu() {
             navLinks.style.top = "-100vh";
         }
+
+        function confirmDeletion(userId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'users.php?do=Delete&user_id=' + userId;
+            }
+        })
+    }
+
+    function forbidDeletion() {
+        Swal.fire({
+            title: 'Action Forbidden',
+            text: 'You cannot delete your own user account.',
+            icon: 'error',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'OK'
+        });
+    }
     </script>
 
     <script>
@@ -744,11 +870,11 @@ if ($do == "Manage") {
         handleScroll();
     </script>
 
-    
+<!-- Back to Top Button -->
 <button id="backToTopBtn" title="Back to Top">
-        <i class="fa fa-arrow-up"></i>
-    </button>
-
+    <i class="fa fa-arrow-up"></i>
+</button>
+    
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -765,12 +891,13 @@ if ($do == "Manage") {
 
             // Smooth scroll to top
             $('#backToTopBtn').click(function() {
-                $('html, body').animate({scrollTop: 0}, 400);
+                $('html, body').animate({scrollTop: 0}, 10);
                 return false;
             });
 
         });
     </script>
+    
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -788,6 +915,20 @@ if ($do == "Manage") {
     });
 });
 </script>
+
+
+<style>
+.footer-socialicon svg, .footer-socialicon em {
+    width: 33px !important;
+    height: 33px !important;
+    fill: #FFFFFF !important;
+    color: #FFFFFF !important;
+}
+.footer-socialicon svg path, .footer-socialicon em {
+    fill: #FFFFFF !important;
+    color: #FFFFFF !important;
+}
+</style>
 
 
         <?php
@@ -811,10 +952,18 @@ if ($do == "Manage") {
                             ?> 
                             <!-- SUCCESS MESSAGE -->
                             <script type="text/javascript">
-                                swal("Edit User", "User has been updated successfully", "success").then((value) => {
-                                    window.location.replace("users.php");
+                                Swal.fire({
+                                    title: 'Edit User',
+                                    text: 'User has been updated successfully',
+                                    icon: 'success',
+                                    confirmButtonColor: '#8CD4F5'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.replace("users.php");
+                                    }
                                 });
                             </script>
+
                             <?php
                         } catch (Exception $e) {
                             echo 'Error occurred: ' . $e->getMessage();
@@ -833,8 +982,15 @@ if ($do == "Manage") {
                             ?> 
                             <!-- SUCCESS MESSAGE -->
                             <script type="text/javascript">
-                                swal("Edit User", "User has been updated successfully", "success").then((value) => {
-                                    window.location.replace("users.php");
+                                Swal.fire({
+                                    title: 'Edit User',
+                                    text: 'User has been updated successfully',
+                                    icon: 'success',
+                                    confirmButtonColor: '#8CD4F5'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.replace("users.php");
+                                    }
                                 });
                             </script>
                             <?php

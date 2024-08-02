@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Content
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject = 'Changing password';
-            $mail->Body = "Please copy the link and paste in your browser address bar<br>https://localhost/fyp/Login222/forgot_password_reset.php?key=$key&email=$email_reg";
+            $mail->Body = "Please copy the link and paste in your browser address bar<br>https://localhost/main_fyp/Login222/forgot_password_reset.php?key=$key&email=$email_reg";
 
             $mail->send();
             $message_success = "Message has been sent. Please check your email inbox or spam folder and follow the steps required to reset your password.";

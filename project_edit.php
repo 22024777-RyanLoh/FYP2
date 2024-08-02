@@ -119,8 +119,8 @@ if (isset($_SESSION['login_user_id'])) {
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
-                    <li><a href="edit.php">Domain</a></li>
-                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="edit.php">Manage Domain</a></li>
+                    <li><a href="upload.php">Manage Project</a></li>
                     <li><a href="logout.php">Sign out</a></li>
                 <?php else: ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -141,7 +141,9 @@ $projectID = $_POST['ProjectID'];
 
             // Fetch all from domains
             $domains_sql = "SELECT * FROM domains";
+            $year_sql = "SELECT * FROM years WHERE display_year = true";
             $domains_result = $conn->query($domains_sql);
+            $year_result = $conn->query($year_sql);
 
             if (!empty($projectID)) {
                 // Fetch project details
@@ -160,7 +162,7 @@ $projectID = $_POST['ProjectID'];
                     $supervisor = $row['Supervisor'];
                     $domain = $row['domain_id'];
                     $semester = $row['Project_semester'];
-                    $year = $row['Project_year'];
+                    $year = $row['year_id'];
                 }
             
                 // Fetch project images and descriptions
@@ -215,8 +217,8 @@ $projectID = $_POST['ProjectID'];
             <div class="form-group">
 
                 <div class="form-inline">
-                    <label for="domain" class="col-form-label" required>Domain: <span class="red-asterisk">*</span></label>
-                    <select name="domain" id="domain" class="form-control">
+                    <label for="domain" class="col-form-label">Domain: <span class="red-asterisk">*</span></label>
+                    <select name="domain" id="domain" class="form-control" required>
                     <?php
                         // Fetch domains again for the modal dropdown
                         $domains_result;
@@ -229,18 +231,21 @@ $projectID = $_POST['ProjectID'];
                 </div>
 
                 <div class="form-inline">
-                    <label for="year" class="col-form-label" required>Year: <span class="red-asterisk">*</span></label>
-                    <select name="year" id="year" class="form-control">
-                    <option value="2021" <?php echo ($year == 2021) ? 'selected' : ''; ?>>2021</option>
-                    <option value="2022" <?php echo ($year == 2022) ? 'selected' : ''; ?>>2022</option>
-                    <option value="2023" <?php echo ($year == 2023) ? 'selected' : ''; ?>>2023</option>
-                    <option value="2024" <?php echo ($year == 2024) ? 'selected' : ''; ?>>2024</option>
+                    <label for="year" class="col-form-label">Year: <span class="red-asterisk">*</span></label>
+                    <select name="year" id="year" class="form-control" required>
+                    <?php
+                        $year_result;
+                        while ($year_row = $year_result->fetch_assoc()) {
+                            $selected = ($year_row['year_id'] == $year) ? 'selected' : '';
+                            echo "<option value='{$year_row['year_id']}'$selected>{$year_row['year']}</option>";
+                        }
+                        ?>
                     </select>
                 </div>
 
                 <div class="form-inline">
-                    <label for="semester" class="col-form-label" required>Semester: <span class="red-asterisk">*</span></label>
-                    <select name="semester" id="semester" class="form-control">
+                    <label for="semester" class="col-form-label">Semester: <span class="red-asterisk">*</span></label>
+                    <select name="semester" id="semester" class="form-control" required>
                     <option value="Sem 1" <?php echo ($semester == 'Sem 1') ? 'selected' : ''; ?>>Sem 1</option>
                     <option value="Sem 2" <?php echo ($semester == 'Sem 2') ? 'selected' : ''; ?>>Sem 2</option>
                     </select>
@@ -437,7 +442,7 @@ $projectID = $_POST['ProjectID'];
 
         // Smooth scroll to top
         $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop: 0}, 400);
+            $('html, body').animate({scrollTop: 0}, 10);
             return false;
         });
 

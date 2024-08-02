@@ -98,8 +98,8 @@ if (isset($_SESSION['login_user_id'])) {
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
-                    <li><a href="edit.php">Domain</a></li>
-                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="edit.php">Manage Domain</a></li>
+                    <li><a href="upload.php">Manage Project</a></li>
                     <li><a href="logout.php">Sign out</a></li>
                 <?php else: ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -352,7 +352,7 @@ $conn->close();
 
         // Smooth scroll to top
         $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop: 0}, 400);
+            $('html, body').animate({scrollTop: 0}, 10);
             return false;
         });
 

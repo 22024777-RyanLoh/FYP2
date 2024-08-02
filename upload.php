@@ -39,7 +39,7 @@ if (isset($_SESSION['login_user_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 
     <!-- SweetAlert JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
         <style>
         .swal2-confirm {
@@ -65,9 +65,20 @@ if (isset($_SESSION['login_user_id'])) {
         #backToTopBtn:hover {
             background-color: #000;
         }
+
+        .ml-3{
+        background-color: #007BFF !important;
+        border-color: #007BFF !important;
+        }
+
         </style>
 
 </head>
+    <!-- Rest of the body content -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <body>
 
 <script>
@@ -140,8 +151,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
-                    <li><a href="edit.php">Domain</a></li>
-                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="edit.php">Manage Domain</a></li>
+                    <li><a href="upload.php">Manage Project</a></li>
                     <li><a href="logout.php">Sign out</a></li>
                 <?php else: ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -154,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 </section>
 
     <div class="title-text">
-        <h1>Manage Projects</h1>
+        <h1>Manage Project</h1>
     </div>
 
 <div class="project_control">
@@ -179,12 +190,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
             $domains_result = $conn->query($domains_sql);
 
             // Pagination configuration
-            $limit = 10; // Number of records per page
+            $limit = 15; // Number of records per page
             $page = isset($_GET['page']) ? $_GET['page'] : 1; // Current page number, default is 1
             $start = ($page - 1) * $limit; // Calculate starting point for the query
 
             // Fetch data from database with pagination
-            $sql = "SELECT * FROM project p JOIN domains d ON p.domain_id = d.domain_id LIMIT $start, $limit";
+            $sql = "SELECT * FROM project p JOIN domains d ON p.domain_id = d.domain_id JOIN years y ON y.year_id = p.year_id LIMIT $start, $limit";
             $result = $conn->query($sql);
             ?>     
             </div>
@@ -214,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                                 <td><?php echo $i; ?></td>
                                 <td><?php echo $row['Project_title']; ?></td>
                                 <td><?php echo $row['domain_name']; ?></td>
-                                <td><?php echo $row['Project_year']; ?></td>
+                                <td><?php echo $row['year']; ?></td>
                                 <td><?php echo $row['Project_semester']; ?></td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -224,8 +235,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                         </form>
-                                        <a href="project_delete.php?id=<?php echo $row['Project_ID']; ?>&name=<?php echo $row['Project_title']; ?>" class="btn btn-danger" 
-                                        onclick="return confirm('Are you sure you want to delete the project: <?php echo $row['Project_title']; ?>?');"><i class="fas fa-trash"></i></a>
+                                        <button class="btn btn-danger" onclick="confirmProjectDeletion(<?php echo $row['Project_ID']; ?>); return false;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -261,8 +273,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                 </div>
             </div>
     </div>
+
+    <script>
+    function confirmDelete(projectTitle) {
+        return confirm('Are you sure you want to delete the project: ' + projectTitle + '?');
+    }
+    </script>
+    
+    <script>
+function confirmProjectDeletion(projectId, projectName) {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success custom-swal-button ml-3',  // Add left margin to the confirm button
+            cancelButton: 'btn btn-danger custom-swal-button'  // Add custom class for the cancel button
+        },
+        buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'project_delete.php?id=' + projectId + '&name=' + encodeURIComponent(projectName);
+        }
+    });
+}
+</script>
  
-    <!-- MY PROFILE MODAL -->
+<!-- MY PROFILE MODAL -->
 <div id="myProfileModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -300,11 +344,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                                 </span>
                             </div>
                         </div>
-                         </div>
-                         </div>
-
                     </div>
-
                     <div class="form-group">
                         <label for="re_user_password">Re-Enter Password</label>
                         <div class="input-group">
@@ -317,7 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                         </div>
                     </div>
                     <div class="password-criteria">
-                        <ul style="padding-left: 1rem;">
+                        <ul style="padding:0;">
                             <li id="8char" class="glyphicon glyphicon-remove"> 8 Characters Long</li>
                             <li id="ucase" class="glyphicon glyphicon-remove"> One Uppercase Letter</li>
                             <li id="lcase" class="glyphicon glyphicon-remove"> One Lowercase Letter</li>
@@ -330,7 +370,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
             </div>
         </div>
     </div>
-</div>  
+</div>   
 
 <script>
     $(document).ready(function() {
@@ -546,79 +586,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-QDT3qP5xXAA2nTeB5S2ur1bV+6vQEO3H+3s5l0ZccRsmkWZi1iXwr17wRlCWc7A9" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-<script>
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var title = button.data('title');
-        var domain = button.data('domain');
-        var year = button.data('year');
-        var semester = button.data('semester');
-        var body = button.data('body');
-        var organisation = button.data('organisation');
-        var members = button.data('members');
-        var supervisor = button.data('supervisor');
 
-        // Update the modal's content.
-        var modal = $(this);
-        modal.find('.modal-title').text('Edit Project: ' + title);
-        modal.find('#project-id').val(id)
-        modal.find('#project-title').val(title)
-        modal.find('#project-domain').val(domain)
-        modal.find('#project-year').val(year)
-        modal.find('#project-semester').val(semester)
-        modal.find('#project-body').val(body).text(body);
-        modal.find('#organisation').val(organisation)
-        modal.find('#members').val(members)
-        modal.find('#supervisor').val(supervisor)
-    });
-
-$('#editForm').on('submit', function (event) {
-    event.preventDefault();
-    var formData = new FormData(this);
-
-    // Log the form data for debugging
-    for (var pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]); 
-    }
-
-    $.ajax({
-        url: 'project_update.php',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-            console.log(response); // Log the response for debugging
-            if (response.includes("updated successfully")) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'The project has been successfully updated!',
-                    confirmButtonColor: '#3085d6' // Blue color for the confirm button
-                }).then(() => {
-                    location.reload(); // Reload the page to reflect changes
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: response
-                });
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText); // Log any errors for debugging
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while updating the project.'
-            });
-        }
-    });
-});
-
-</script>
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -650,7 +618,7 @@ $('#editForm').on('submit', function (event) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
-                    text: 'The project has been successfully deleted!'
+                    text: 'Your project has been successfully deleted!'
                 });
             } else if (status === '0') {
                 Swal.fire({
@@ -659,6 +627,7 @@ $('#editForm').on('submit', function (event) {
                     text: 'An error occurred while deleting the project.'
                 });
             }
+
         });
     </script>
     
@@ -704,7 +673,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Smooth scroll to top
         $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop: 0}, 400);
+            $('html, body').animate({scrollTop: 0}, 10);
             return false;
         });
 
@@ -732,7 +701,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Smooth scroll to top
         $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop: 0}, 400);
+            $('html, body').animate({scrollTop: 0}, 10);
             return false;
         });
 

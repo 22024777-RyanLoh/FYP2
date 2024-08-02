@@ -83,7 +83,14 @@ function fetchDomainInfo($conn, $domainId) {
 }
 
 function filterDomainInfo($conn) {
+    $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin';
+
+    // Prepare SQL query
     $sql = "SELECT * FROM domains";
+    if (!$isAdmin) {
+        $sql .= " WHERE display_domain = 1";
+    }
+    
     $result = mysqli_query($conn, $sql);
     $domainFilter = array();
     if ($result && mysqli_num_rows($result) > 0) {
@@ -101,8 +108,14 @@ $domains = array();
 $backgroundImages = array();
 $descriptions = array();
 
+// Check if user is admin
+$isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin';
 $sql = "SELECT domain_id, domain_name, domain_image, domain_description FROM domains";
-$result = mysqli_query($conn, $sql);
+    if (!$isAdmin) {
+        $sql .= " WHERE display_domain = 1";
+    }
+    
+    $result = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_assoc($result)) {
     $domainInfo = fetchDomainInfo($conn, $row['domain_id']);
     $domains[$row['domain_id']] = $row['domain_name'];
@@ -195,7 +208,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
             // Content
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject = 'Changing password';
-            $mail->Body = "Please copy the link and paste in your browser address bar<br>https://localhost/fyp/Login222/forgot_password_reset.php?key=$key&email=$email_reg";
+            $mail->Body = "Please copy the link and paste in your browser address bar<br>https://localhost/main_fyp/Login222/forgot_password_reset.php?key=$key&email=$email_reg";
 
             $mail->send();
             $message_success = "Message has been sent. Please check your email inbox or spam folder and follow the steps required to reset your password.";
@@ -268,13 +281,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
                     <li><a href="#" onclick="showProfileModal()"><span class="welcome-message" style="color: #FFFFFF;">Welcome, <?php echo $_SESSION['login_user']; ?></span></a></li>
                     <?php if($isAdmin): ?>
-                        <li><a href="login222/dashboard.php"<?php echo $_SESSION['login_user_id'] ?>">
+                        <li><a href="login222/dashboard.php"<?php echo $_SESSION['login_user_id'] ?>>
                                 <span style="color: #fff;">Dashboard</span>
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
-                    <li><a href="edit.php">Domain</a></li>
-                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="edit.php">Manage Domain</a></li>
+                    <li><a href="upload.php">Manage Project</a></li>
                     <li><a href="logout.php">Sign out</a></li>
                 <?php else: ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -316,29 +329,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
 
     <section class="cards">
     <?php foreach ($domains as $id => $domain) : ?>
-            
-        <div class="card card<?php echo $id; ?>" style="background-image: linear-gradient(rgba(4,9,30,0.5), rgba(4,9,30,0.5)),url('data:image/jpeg;base64,<?php echo $backgroundImages[$id]; ?>');">
-            <div class="card-text">
-                <section class = "card-center">
-                    <h2><?php echo $domain; ?></h2>
-                    <p><?php echo isset($descriptions[$id]) ? $descriptions[$id] : ''; ?></p>
-                    <!-- Display click count dynamically -->
-                    <?php if ($isAdmin): ?>
-                      <p id="clickCount_<?php echo $domain; ?>">Click Count: <span id="click-count-<?php echo $domain; ?>"><?php 
-                      $jsonFile = 'click_counts.json';
-                     if (file_exists($jsonFile) && is_readable($jsonFile)) {
-                     $jsonData = json_decode(file_get_contents($jsonFile), true);
-                     if (isset($jsonData[$domain])) {
-                      echo $jsonData[$domain];
-                     } else {
-                     echo 0;
-                    } 
-                    } else {
-                       echo 0;
-                     }
-                     ?></span></p>
-                    <?php endif; ?>
-                    <a href="domain_page.php?domain_id=<?php echo urlencode($id); ?>" class="learn-more-btn">Learn More</a>
+            <div class="card card<?php echo $id; ?>" style="background-image: linear-gradient(rgba(4,9,30,0.5), rgba(4,9,30,0.5)),url('data:image/jpeg;base64,<?php echo $backgroundImages[$id]; ?>');">
+                <div class="card-text">
+                    <section class="card-center">
+                        <h2><?php echo $domain; ?></h2>
+                        <p><?php echo isset($descriptions[$id]) ? $descriptions[$id] : ''; ?></p>
+                        <!-- Display click count dynamically -->
+                        <?php if ($isAdmin): ?>
+                            <!--
+                            <p id="clickCount_<?php echo $domain; ?>">Click Count: <span id="click-count-<?php echo $domain; ?>"><?php 
+                            $jsonFile = 'click_counts.json';
+                            if (file_exists($jsonFile) && is_readable($jsonFile)) {
+                                $jsonData = json_decode(file_get_contents($jsonFile), true);
+                                if (isset($jsonData[$domain])) {
+                                    echo $jsonData[$domain];
+                                } else {
+                                    echo 0;
+                                } 
+                            } else {
+                                echo 0;
+                            }
+                            ?></span></p>
+                            -->
+                        <?php endif; ?>
+                        <a href="domain_page.php?domain_id=<?php echo urlencode($id); ?>" class="learn-more-btn">Learn More</a>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -767,7 +782,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
 
         // Smooth scroll to top
         $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop: 0}, 400);
+            $('html, body').animate({scrollTop: 0}, 500);
             return false;
         });
 
@@ -847,7 +862,7 @@ function showErrorAlert(title, text) {
                         </div>
                     </div>
                     <div class="password-criteria">
-                        <ul>
+                        <ul style="padding:0;">
                             <li id="8char" class="glyphicon glyphicon-remove"> 8 Characters Long</li>
                             <li id="ucase" class="glyphicon glyphicon-remove"> One Uppercase Letter</li>
                             <li id="lcase" class="glyphicon glyphicon-remove"> One Lowercase Letter</li>
@@ -861,6 +876,7 @@ function showErrorAlert(title, text) {
         </div>
     </div>
 </div>  
+
 
 </body>
 </html>

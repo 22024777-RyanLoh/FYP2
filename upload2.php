@@ -119,8 +119,8 @@ if (isset($_SESSION['login_user_id'])) {
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
-                    <li><a href="edit.php">Domain</a></li>
-                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="edit.php">Manage Domain</a></li>
+                    <li><a href="upload.php">Manage Project</a></li>
                     <li><a href="logout.php">Sign out</a></li>
                 <?php else: ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -141,7 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Fetch all from domains
     $conn = mysqli_connect("localhost", "root", "", "fyp_test");
     $domains_sql = "SELECT * FROM domains";
+    $year_sql = "SELECT * FROM years WHERE display_year = true";
     $domains_result = $conn->query($domains_sql);
+    $year_result = $conn->query($year_sql);
 
     // Initialize variables
     $title = $organisation = $overview = $members = $supervisor = $image_description = '';
@@ -176,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>Review the Information</h2>
 
             <div class="form-group">
-                <label for="project-title" class="col-form-label">Title:</label>
+                <label for="project-title" class="col-form-label">Title: <span class="red-asterisk">*</span></label>
                 <textarea name="Etitle" class="form-control" required><?php echo htmlspecialchars($title); ?></textarea>
             </div>
     
@@ -186,17 +188,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="project-title" class="col-form-label">Project Overview:</label>
+                <label for="project-title" class="col-form-label">Project Overview: <span class="red-asterisk">*</span></label>
                 <textarea name="Eoverview" class="form-control" rows='15' required><?php echo htmlspecialchars($overview); ?></textarea>
             </div>
 
             <div class="form-group">
-                <label for="project-title" class="col-form-label">Members:</label>
+                <label for="project-title" class="col-form-label">Members: <span class="red-asterisk">*</span></label>
                 <textarea name="Emembers" class="form-control" rows='4' required><?php echo htmlspecialchars($members); ?></textarea>
             </div>
 
             <div class="form-group">
-                <label for="project-title" class="col-form-label">Supervisor:</label>
+                <label for="project-title" class="col-form-label">Supervisor: <span class="red-asterisk">*</span></label>
                 <textarea name="Esupervisor" class="form-control" rows='4' required><?php echo htmlspecialchars($supervisor); ?></textarea>
             </div>
 
@@ -208,8 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
 
                 <div class="form-inline">
-                    <label for="domain" class="col-form-label" required>Domain:</label>
-                    <select name="domain" id="domain" class="form-control">
+                    <label for="domain" class="col-form-label">Domain: <span class="red-asterisk">*</span></label>
+                    <select name="domain" id="domain" class="form-control"required>
                     <?php
                         // Fetch domains again for the modal dropdown
                         $domains_result;
@@ -221,18 +223,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-inline">
-                    <label for="year" class="col-form-label" required>Year:</label>
-                    <select name="year" id="year" class="form-control">
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
+                    <label for="year" class="col-form-label">Year: <span class="red-asterisk">*</span></label>
+                    <select name="year" id="year" class="form-control" required>
+                        <?php
+                        $year_result;
+                        while ($year_row = $year_result->fetch_assoc()) {
+                            echo "<option value='{$year_row['year_id']}'>{$year_row['year']}</option>";
+                        }
+                        ?>
                     </select>
                 </div>
 
                 <div class="form-inline">
-                    <label for="semester" class="col-form-label" required>Semester:</label>
-                    <select name="semester" id="semester" class="form-control">
+                    <label for="semester" class="col-form-label">Semester: <span class="red-asterisk">*</span></label>
+                    <select name="semester" id="semester" class="form-control" required>
                         <option value="Sem 1">Sem 1</option>
                         <option value="Sem 2">Sem 2</option>
                     </select>
@@ -371,7 +375,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Smooth scroll to top
         $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop: 0}, 400);
+            $('html, body').animate({scrollTop: 0}, 10);
             return false;
         });
 

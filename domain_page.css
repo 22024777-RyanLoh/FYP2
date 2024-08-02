@@ -110,7 +110,7 @@ nav img {
     content: '';
     width: 0%;
     height: 2px;
-    background: #ff7300;
+    background: #000000;
     display: block;
     margin: auto;
     transition: 0.5s;
@@ -120,6 +120,25 @@ nav img {
     width: 100%;
 }
 
+.text-box {
+    width: 90%;
+    color: #fff;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+}
+
+.text-box h1 {
+    font-size: 62px;
+}
+
+.text-box p {
+    margin: 10px 0 40px;
+    font-size: 14px;
+    color: #fff;
+}
 
 nav .fa {
     display: none;
@@ -136,9 +155,9 @@ nav .fa {
     }
 
     .nav-links {
-        position: fixed;
-        background: #ff4800;
-        height: 65vh;
+        position: absolute;
+        background: #333;
+        height: 70vh;
         width: 100%; /* Full width to cover the screen */
         top: -100vh; /* Start off-screen at the top */
         left: 0; /* Ensure it covers the entire width */
@@ -268,12 +287,8 @@ p{
 
 /*--------------text-box------------------*/
 .text-box {
-    max-width: 600px;
-    margin-bottom: 100px;
     margin-left: auto; /* Move the box to the right */
-    padding: 20px;
     width: 90%;
-    height: 50%;
     color: #fff;
     text-align: right;
 }
@@ -285,7 +300,6 @@ p{
 @media (max-width: 768px) {
     .text-box {
         max-width: 100%; 
-        margin-top: 100px; 
         margin-left: auto; 
         width: 100%; 
         text-align: right; 
@@ -481,7 +495,7 @@ p{
 }
 
 /* Modal Content */
-.modal-content {
+.modal-contents {
     display: flex;
     flex-direction: column; /* Stack children vertically */
     justify-content: space-between; /* Space out children */
@@ -524,7 +538,7 @@ p{
 }
 
 /* Individual Images */
-.modal-content img {
+.modal-contents img {
     width: 100%; /* Ensures the image spans the grid item */
     max-width: 80%; /* Maximum width */
     height: auto; /* Maintain aspect ratio */
@@ -532,14 +546,14 @@ p{
 }
 
 /* Modal Content Headings */
-.modal-content h2 {
+.modal-contents h2 {
     color: #ff7300;
     font-size: 26px; /* Larger font size for headings */
     margin-bottom: 10px;
 }
 
 /* Modal Content Paragraphs */
-.modal-content p {
+.modal-contents p {
     font-size: 18px; /* Medium font size for paragraphs */
     line-height: 1.6;
     color: #555;
@@ -561,7 +575,7 @@ p{
 
 /* Responsive Design for max-width: 768px */
 @media (max-width: 768px) {
-    .modal-content {
+    .modal-contents {
         width: 85% !important; /* Adjust width for smaller screens */
         max-width: none; /* Remove maximum width for better fit */
         font-size: 14px !important; /* Adjust font size for readability */
@@ -584,3 +598,9 @@ p{
         font-size: 24px; /* Smaller close button for smaller screens */
     }
 }
+
+.password-criteria ul{
+    list-style: none;
+}
+
+

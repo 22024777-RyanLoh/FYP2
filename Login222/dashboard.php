@@ -23,10 +23,247 @@ if(isset($_SESSION['login_user']) && $_SESSION['user_role'] == 'Admin') {
         }
         vertical_menu.getElementsByClassName('dashboard_link')[0].className += " active_link";
     </script>
-WORK IN PROGRESS <BR>
-WILL ADD THINGS LATER.
-<!-- TOP 4 CARDS -->
-<!-- Add your card code here -->
+    <div class="domainempty" style="min-height: 100vh;">
+    <div class="table-container"style="min-height: 0;">
+        <div class="table-content">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <h2 class="mr-3">Modification of Years</h2>
+                    <form id="addYearForm" method="POST" class="form-inline">
+                        <div class="form-group mb-2">
+                            <label for="newYear" class="sr-only">Add Year</label>
+                            <input type="number" class="form-control" id="newYear" name="newYear" placeholder="Year" required min="1900" max="2100">
+                            </div>
+                        <button type="submit" class="btn btn-primary mb-2 ml-2">Add Year</button>
+                    </form>
+                </div>
+            </div>
+            <p class="mt-3" style="color: black;">Note: Your changes will be automatically saved.</p>
+            <table class="table responsive-table">
+                <thead>
+                <tr>
+                    <th>Years</th>
+                    <th>Display</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="yearsTableBody">
+                    <?php
+                    // Fetch years from the database
+                    $sql = "SELECT * FROM years";
+                    $result = $conn->query($sql);
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>{$row['year']}</td>";
+                            echo "<td><input type='checkbox' ".($row['display_year'] ? "checked" : "")." data-id='{$row['year_id']}' class='toggle-display'></td>";
+                            echo "<td><button type='button' data-id='{$row['year_id']}' class='btn btn-danger delete-year' style='display: flex; align-items: center; justify-content: center; margin-top: 0;'>
+                            <i class='fas fa-trash' style='color: white;'></i>
+                            </button></td>";
+                            echo "</tr>";
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="domainempty" style="min-height: 100vh;">
+    <div class="table-container"style="min-height: 0;">
+        <div class="table-content">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <h2 class="mr-3">Visitor Displayed Domains</h2>
+                </div>
+            </div>
+            <p class="mt-3" style="color: black;">Note: Your changes will be automatically saved.</p>
+            <table class="table responsive-table2">
+                <thead>
+                <tr>
+                    <th>Domains</th>
+                    <th>Display</th>
+                </tr>
+                </thead>
+                <tbody id="domainTableBody">
+                    <?php
+                    // Fetch years from the database
+                    $sql = "SELECT * FROM domains";
+                    $result = $conn->query($sql);
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>{$row['domain_name']}</td>";
+                            echo "<td><input type='checkbox' ".($row['display_domain'] ? "checked" : "")." data-id='{$row['domain_id']}' class='toggle-display-domain'></td>";
+                            echo "</tr>";
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+    // Handle character limit for the year input
+    $('#newYear').on('input', function() {
+        if (this.value.length > 4) {
+            this.value = this.value.slice(0, 4);
+        }
+    });
+
+    // Handle add year form submission
+    $('#addYearForm').submit(function(e) {
+        e.preventDefault();
+        var newYear = $('#newYear').val();
+        if (newYear < 1900 || newYear > 2100) {
+            alert('Year must be between 1900 and 2100.');
+            return;
+        }
+        $.ajax({
+            url: 'add_year.php',
+            type: 'POST',
+            data: { year: newYear },
+            success: function(response) {
+                if (response.trim() == 'success') {
+                    location.reload();
+                } else {
+                    alert('Failed to add year: ' + response);
+                }
+            }
+        });
+    });
+
+    // Handle display toggle
+    $('.toggle-display').change(function() {
+        var id = $(this).data('id');
+        var display_year = $(this).is(':checked') ? 1 : 0;
+        $.ajax({
+            url: 'update_display.php',
+            type: 'POST',
+            data: { id: id, display_year: display_year },
+            success: function(response) {
+                if (response.trim() != 'success') {
+                    alert('Failed to update display status: ' + response);
+                }
+            }
+        });
+    });
+
+    // Handle display toggle domain
+    $('.toggle-display-domain').change(function() {
+            var id = $(this).data('id');
+            var display_domain = $(this).is(':checked') ? 1 : 0;
+            $.ajax({
+                url: 'update_display_domain.php',
+                type: 'POST',
+                data: { id: id, display_domain: display_domain },
+                success: function(response) {
+                    if (response.trim() != 'success') {
+                        alert('Failed to update display status: ' + response);
+                    }
+                }
+            });
+        });
+
+    // Handle year delete
+    $('.delete-year').click(function(e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success custom-swal-button ml-3',  // Add left margin to the confirm button
+                cancelButton: 'btn btn-danger custom-swal-button'  // Add custom class for the cancel button
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure you want to delete this year?',
+            text: "This action cannot be undone.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'delete_year.php',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function(response) {
+                        if (response.trim() == 'success') {
+                            swalWithBootstrapButtons.fire({
+                                title: 'Deleted!',
+                                text: 'The year has been deleted.',
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            swalWithBootstrapButtons.fire({
+                                title: 'Failed!',
+                                text: 'Unable to delete year because there are still projects associated with it.',
+                                icon: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    // Handle save changes button click
+    $('#saveChangesButton').click(function() {
+        alert('Your changes have been successfully saved');
+        location.reload();
+    });
+});
+
+    </script>
+
+    <div class="container mt-5">
+        <h2>Domain Information</h2>
+        <?php
+        // Function to generate table from data
+        function generateTable($data) {
+            if (empty($data) || !is_array($data)) {
+                echo '<p>No data available.</p>';
+                return;
+            }
+
+            // Start table
+            echo '<table class="table table-bordered">';
+            echo '<thead><tr><th>Domain</th><th>Visitor Click Count</th></tr></thead>';
+            echo '<tbody>';
+
+            // Loop through the associative array and create rows
+            foreach ($data as $domain => $clicks) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars($domain) . '</td>';
+                echo '<td>' . htmlspecialchars($clicks) . '</td>';
+                echo '</tr>';
+            }
+
+            // End table
+            echo '</tbody></table>';
+        }
+
+        // Read and decode the JSON file
+        $jsonFile = file_get_contents('../click_counts.json');
+        $data = json_decode($jsonFile, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo '<p>Error decoding JSON data: ' . json_last_error_msg() . '</p>';
+        } else {
+            // Generate table for JSON file data
+            generateTable($data);
+        }
+        ?>
+    </div>
+    </div>
 <?php
 } else {
     header("Location: ../home.php");
@@ -81,21 +318,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<!-- <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../edit.css">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="../footer.css">
+</head> -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../edit.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../footer.css">
+
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
+    <!-- SweetAlert JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
+
 <body>
 
 <!-- MY PROFILE MODAL -->
-<div id="myProfileModal" class="modal fade" tabindex="-1" role="dialog">
+<div id="myProfileModal" id="editModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -105,7 +365,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                 </button>
             </div>
             <div class="modal-body">
-                <form class="menu_form" id="profileForm" method="POST" action="../home.php" onsubmit="return validatePassword();">
+                <form class="menu_form" id="profileForm" method="POST" action="home.php" onsubmit="return validatePassword();">
                     <input type="hidden" name="user_id" value="<?php echo $_SESSION['login_user_id']; ?>">
                     <div class="form-group">
                         <label for="full_name">Full Name</label>
@@ -145,7 +405,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                         </div>
                     </div>
                     <div class="password-criteria">
-                        <ul style="padding-left: 0;">
+                        <ul style="padding:0; margin-bottom: 15px;">
                             <li id="8char" class="glyphicon glyphicon-remove"> 8 Characters Long</li>
                             <li id="ucase" class="glyphicon glyphicon-remove"> One Uppercase Letter</li>
                             <li id="lcase" class="glyphicon glyphicon-remove"> One Lowercase Letter</li>
@@ -158,7 +418,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
             </div>
         </div>
     </div>
-</div>  
+</div> 
 
 		<div class="content">
 			<footer class="footer">
@@ -252,7 +512,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
     <!-- Back to Top Button -->
     <button id="backToTopBtn" title="Back to Top">
     <i class="fa fa-arrow-up"></i>
-</button>
+    </button>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -270,7 +530,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
 
         // Smooth scroll to top
         $('#backToTopBtn').click(function() {
-            $('html, body').animate({scrollTop: 0}, 400);
+            $('html, body').animate({scrollTop: 0}, 10);
             return false;
         });
 
@@ -414,5 +674,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
         }
     };
 </script>
+
+<!-- Add custom styles for the buttons -->
+<style>
+    .custom-swal-button {
+        margin: 0 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.25;
+        border-radius: 0.25rem;
+        transition: all 0.15s ease-in-out;
+    }
+
+    .ml-3 {
+        margin-left: 15px !important;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const rows = document.querySelectorAll('.responsive-table tbody tr');
+
+    rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td'));
+        cells.forEach((cell, index) => {
+            // Set data-label for all visible columns
+            const headers = row.parentNode.previousElementSibling.querySelectorAll('th'); // Get headers
+            const headerText = headers[index] ? headers[index].textContent.trim() : ''; // Get header text
+            cell.setAttribute('data-label', headerText); // Set data-label based on header
+        });
+    });
+});
+
+</script>
+
 </body>
 </html>

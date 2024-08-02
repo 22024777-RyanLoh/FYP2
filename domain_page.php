@@ -18,6 +18,76 @@ if (isset($_SESSION['login_user_id'])) {
         $isAdmin = ($row['user_role'] === 'Admin');
     }
 }
+// Login handling
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    include 'Login222/connect.php'; 
+    $email = mysqli_real_escape_string($dbconfig, $_POST['email']);
+    $password = mysqli_real_escape_string($dbconfig, $_POST['password']);
+    $password = md5($password); // hashing with md5
+    $sql_query = "SELECT user_id, user_fullname, email, user_role FROM user WHERE email='$email' and user_password='$password'";
+    $result = mysqli_query($dbconfig, $sql_query);
+    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+    $count = mysqli_num_rows($result);
+
+    if ($count == 1 && $row !== null) { // if login success
+        $_SESSION['login_user'] = $row['user_fullname'];
+        $_SESSION['login_email'] = $row['email'];
+        $_SESSION['login_user_id'] = $row['user_id']; // Add user_id to session
+        $_SESSION['user_role'] = $row['user_role']; // Add user role to session
+
+        header("Location: home.php"); // Redirect to home.php
+        exit(); // Make sure to exit after the redirection
+    } else {
+        $error = "Invalid login details. Email or password may be incorrect.";
+        echo "<script>localStorage.setItem('loginError', 'true');</script>";
+    }
+}
+
+// Forgot Password handling
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset_password'])) {
+    $email_reg = mysqli_real_escape_string($dbconfig, $_POST['reset_email']);
+    $details = mysqli_query($dbconfig, "SELECT user_fullname, email FROM user WHERE email='$email_reg'");
+    if (mysqli_num_rows($details) > 0) {
+        $message_success = "Please check your email inbox or spam folder and follow the steps";
+        // generating the random key
+        $key = md5(time() + 123456789 % rand(4000, 55000000));
+        // insert this temporary key into database
+        $sql_insert = mysqli_query($dbconfig, "INSERT INTO forget_password(email, temp_key) VALUES('$email_reg', '$key')");
+        // sending email about update
+
+        $mail = new PHPMailer(true);
+        try {
+            //Server settings
+            $mail->SMTPDebug = 0; // Disable verbose debug output
+            $mail->isSMTP(); // Send using SMTP
+            $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+            $mail->SMTPAuth = true; // Enable SMTP authentication
+            $mail->Username = 'naolao11111@gmail.com'; // SMTP username
+            $mail->Password = 'lkvy cveu vsnn xlql'; // SMTP password
+            $mail->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
+            $mail->Port = 587; // TCP port to connect to
+
+            //Recipients
+            $mail->setFrom('naolao11111@gmail.com', 'fyp');
+            $mail->addAddress($email_reg); // Add a recipient
+
+            // Content
+            $mail->isHTML(true); // Set email format to HTML
+            $mail->Subject = 'Changing password';
+            $mail->Body = "Please copy the link and paste in your browser address bar<br>https://localhost/main_fyp/Login222/forgot_password_reset.php?key=$key&email=$email_reg";
+
+            $mail->send();
+            $message_success = "Message has been sent. Please check your email inbox or spam folder and follow the steps required to reset your password.";
+            echo "<script>localStorage.setItem('passwordResetSuccess', 'true');</script>";
+        } catch (Exception $e) {
+            $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            echo "<script>localStorage.setItem('passwordResetError', 'true');</script>";
+        }
+    } else {
+        $message = "Sorry! no account associated with this email.";
+        echo "<script>localStorage.setItem('passwordResetError', 'true');</script>";
+    }
+}
     
 // Fetch domain name from URL parameter
 $domainId = isset($_GET['domain_id']) ? intval($_GET['domain_id']) : 0;
@@ -46,12 +116,13 @@ function fetchDomainInfo($conn, $domainId) {
 }
 
 function fetchProjectDetails($conn, $domainId) {
-    $sql = "SELECT DISTINCT p.Project_ID, p.Project_title, p.Project_year, p.Project_semester, 
+    $sql = "SELECT DISTINCT p.Project_ID, p.Project_title, y.year, p.Project_semester, 
                    p.Project_body, p.Organisation, p.Members, p.Supervisor,
-                   pi.Image_ID, pi.Project_image, pi.Image_description 
+                   pi.Image_ID, pi.Project_image, pi.Image_description, y.display_year
             FROM project p 
             LEFT JOIN domains d ON p.domain_id = d.domain_id
             LEFT JOIN project_image pi ON p.Project_ID = pi.Project_ID 
+            LEFT JOIN years y ON y.year_id = p.year_id
             WHERE d.domain_id = '$domainId'";
     $result = mysqli_query($conn, $sql);
     $projects = array();
@@ -63,7 +134,8 @@ function fetchProjectDetails($conn, $domainId) {
                 $projects[$projectID] = array(
                     'Project_ID' => $row['Project_ID'],
                     'Project_title' => $row['Project_title'],
-                    'Project_year' => $row['Project_year'],
+                    'display_year' => $row['display_year'],
+                    'year' => $row['year'],
                     'Project_semester' => $row['Project_semester'],
                     'Project_body' => $row['Project_body'],
                     'Organisation' => $row['Organisation'],
@@ -85,6 +157,22 @@ function fetchProjectDetails($conn, $domainId) {
     return $projects;
 }
 
+$projects = fetchProjectDetails($conn, $domainId);
+
+$years = array();
+foreach ($projects as $project) {
+    $year = $project['year'];
+    $displayYear = $project['display_year'];
+    if (!isset($years[$year])) {
+        $years[$year] = array(
+            'display_year' => $displayYear,
+            'projects' => array()
+        );
+    }
+    $years[$year]['projects'][] = $project;
+}
+
+
 // Fetch domain information
 $domainInfo = fetchDomainInfo($conn, $domainId);
 
@@ -92,10 +180,7 @@ $domainInfo = fetchDomainInfo($conn, $domainId);
 $projects = fetchProjectDetails($conn, $domainId);
 
 // Sort the array keys to ensure correct button order
-$years = array();
-foreach ($projects as $project) {
-    $years[$project['Project_year']][] = $project;
-}
+
 ksort($years);
 
 mysqli_close($conn);
@@ -180,8 +265,8 @@ mysqli_close($conn);
                         </a></li>
                         <li><a href="login222/users.php">Admin Panel</a></li>
                     <?php endif; ?>
-                    <li><a href="edit.php">Domain</a></li>
-                    <li><a href="upload.php">Project</a></li>
+                    <li><a href="edit.php">Manage Domain</a></li>
+                    <li><a href="upload.php">Manage Project</a></li>
                     <li><a href="logout.php">Sign out</a></li>
                 <?php else: ?>
                     <li><a href="home.php"><img src="Domain_picture/transRP.png" alt="Logo"></a></li>
@@ -196,53 +281,63 @@ mysqli_close($conn);
         <h1><?php echo $domainInfo['name']; ?></h1>
     </div>
 </section>
-
-<div class="year-buttons">
-    <?php foreach ($years as $year => $yearProjects): ?>
-        <button onclick="showYearSection('<?php echo 'year' . $year; ?>')" class="<?php echo $year == 2020 ? 'active' : ''; ?>"><?php echo $year; ?></button>
-    <?php endforeach; ?>
-</div>
-
-<?php foreach ($years as $year => $yearProjects): ?>
-    <div class="year-section <?php echo $year == array_key_first($years) ? 'active' : ''; ?>" id="<?php echo 'year' . $year; ?>">
-        <?php foreach ($yearProjects as $project): ?>
-            <div class="content-section">
-                <div class="year-semester">
-                    <h3><?php echo $year; ?></h3>
-                    <h4><?php echo $project['Project_semester']; ?></h4>
-                </div>
-                <div class="card-box">
-                    <div class="card" data-title="<?php echo htmlspecialchars($project['Project_title']); ?>" 
-                        data-description="<?php echo htmlspecialchars($project['Project_body']); ?>"
-                        data-organisation="<?php echo htmlspecialchars($project['Organisation']); ?>"
-                        data-members="<?php echo htmlspecialchars($project['Members']); ?>"
-                        data-supervisor="<?php echo htmlspecialchars($project['Supervisor']); ?>"
-                        data-project-id="<?php echo htmlspecialchars($project['Project_ID']); ?>">
-                        <div class="description">
-                            <h2><?php echo $project['Project_title']; ?></h2>
-                            <?php
-                            // Extract first sentence from Project_body
-                            $description = $project['Project_body'];
-                            $firstSentence = strtok($description, '.'); // Get first sentence
-                            ?>
-                            <p class="short-description"><?php echo htmlspecialchars($firstSentence). '...'; ?></p>
-                            <p class="full-description" style="display: none;"><?php echo htmlspecialchars($project['Project_body']); ?></p>
-                            <p><b>Organisation</b>: <?php echo $project['Organisation']; ?></p>
-                            <p><b>Members</b>: <?php echo $project['Members']; ?></p>
-                            <p><b>Supervisor</b>: <?php echo $project['Supervisor']; ?></p>
-                            <button class="learn-more-btn" data-project-id="<?php echo $project['Project_ID']; ?>" data-domain-name="<?php echo $domainInfo['name']; ?>">Learn More</button>
-                        </div>
-                        <div class="image-wrapper">
-                            <?php foreach ($project['images'] as $image): ?>
-                                <img src="<?php echo 'data:image/jpeg;base64,' . ($image['Project_image']); ?>">
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="domainempty" style="min-height:50vh;">
+<?php if (!empty($years) && array_filter($years, fn($yearData) => $yearData['display_year'] && !empty($yearData['projects']))): ?>
+    <div class="year-buttons">
+        <?php foreach ($years as $year => $yearData): ?>
+            <?php if ($yearData['display_year']): ?>
+                <button onclick="showYearSection('<?php echo 'year' . $year; ?>')" class="<?php echo $year == 2020 ? 'active' : ''; ?>"><?php echo $year; ?></button>
+            <?php endif; ?>
         <?php endforeach; ?>
     </div>
-<?php endforeach; ?>
+
+    <?php foreach ($years as $year => $yearData): ?>
+        <?php if ($yearData['display_year']): ?>
+            <div class="year-section <?php echo $year == array_key_first(array_filter($years, fn($yearData) => $yearData['display_year'])) ? 'active' : ''; ?>" id="<?php echo 'year' . $year; ?>">
+                <?php foreach ($yearData['projects'] as $project): ?>
+                    <div class="content-section">
+                        <div class="year-semester">
+                            <h3><?php echo $year; ?></h3>
+                            <h4><?php echo $project['Project_semester']; ?></h4>
+                        </div>
+                        <div class="card-box">
+                            <div class="card" data-title="<?php echo htmlspecialchars($project['Project_title']); ?>" 
+                                data-description="<?php echo htmlspecialchars($project['Project_body']); ?>"
+                                data-organisation="<?php echo htmlspecialchars($project['Organisation']); ?>"
+                                data-members="<?php echo htmlspecialchars($project['Members']); ?>"
+                                data-supervisor="<?php echo htmlspecialchars($project['Supervisor']); ?>"
+                                data-project-id="<?php echo htmlspecialchars($project['Project_ID']); ?>">
+                                <div class="description">
+                                    <h2><?php echo $project['Project_title']; ?></h2>
+                                    <?php
+                                    // Extract first sentence from Project_body
+                                    $description = $project['Project_body'];
+                                    $firstSentence = strtok($description, '.'); // Get first sentence
+                                    ?>
+                                    <p class="short-description"><?php echo htmlspecialchars($firstSentence). '...'; ?></p>
+                                    <p class="full-description" style="display: none;"><?php echo htmlspecialchars($project['Project_body']); ?></p>
+                                    <p><b>Organisation</b>: <?php echo $project['Organisation']; ?></p>
+                                    <p><b>Members</b>: <?php echo $project['Members']; ?></p>
+                                    <p><b>Supervisor</b>: <?php echo $project['Supervisor']; ?></p>
+                                    <button class="learn-more-btn" data-project-id="<?php echo $project['Project_ID']; ?>" data-domain-name="<?php echo $domainInfo['name']; ?>">Learn More</button>
+                                </div>
+                                <div class="image-wrapper">
+                                    <?php foreach ($project['images'] as $image): ?>
+                                        <img src="<?php echo 'data:image/jpeg;base64,' . ($image['Project_image']); ?>">
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p style="color: black; font-size:x-large;">There is no content to be showcased at the moment.</p>
+<?php endif; ?>
+</div>
+
 
 <?php
 // Profile update handling logic
@@ -341,7 +436,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
                         </div>
                     </div>
                     <div class="password-criteria">
-                        <ul style="padding-left: 0;">
+                        <ul style="padding:0;">
                             <li id="8char" class="glyphicon glyphicon-remove"> 8 Characters Long</li>
                             <li id="ucase" class="glyphicon glyphicon-remove"> One Uppercase Letter</li>
                             <li id="lcase" class="glyphicon glyphicon-remove"> One Lowercase Letter</li>
@@ -356,6 +451,135 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
     </div>
 </div>  
 
+        <!-- LOGIN MODAL -->
+        <div id="loginModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Admin / Staff Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="login">
+                        <form class="login-container validate-form" name="login-form" action="home.php" method="POST">
+                            <div class="text-center mb-4">
+                                <a href="home.php">
+                                    <img src="Domain_picture/rp-logo.png" alt="Republic Polytechnic" width="175" height="57">
+                                </a>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" name="email" class="form-control" id="email" autocomplete="off" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" title="Invalid email address. You are missing an '@' and '.' in your email.">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <div class="input-group">
+                                    <input type="password" name="password" class="form-control" id="password" autocomplete="new-password" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-eye toggle-password" toggle="#password"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" name="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <?php if (isset($error)) {
+                                echo "<div class='alert alert-danger mt-3'>$error</div>";
+                            } ?>
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="#" onclick="showForgotPasswordModal()">Forgot your password?</a>
+                                <a href="home.php">Back to homepage</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+         <!-- LOGIN MODAL -->
+         <div id="loginModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Admin / Staff Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="login">
+                        <form class="login-container validate-form" name="login-form" action="home.php" method="POST">
+                            <div class="text-center mb-4">
+                                <a href="home.php">
+                                    <img src="Domain_picture/rp-logo.png" alt="Republic Polytechnic" width="175" height="57">
+                                </a>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" name="email" class="form-control" id="email" autocomplete="off" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" title="Invalid email address. You are missing an '@' and '.' in your email.">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <div class="input-group">
+                                    <input type="password" name="password" class="form-control" id="password" autocomplete="new-password" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-eye toggle-password" toggle="#password"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" name="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <?php if (isset($error)) {
+                                echo "<div class='alert alert-danger mt-3'>$error</div>";
+                            } ?>
+                            <div class="d-flex justify-content-between mt-3">
+                                <a href="#" onclick="showForgotPasswordModal()">Forgot your password?</a>
+                                <a href="home.php">Back to homepage</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORGOT PASSWORD MODAL -->
+    <div id="forgotPasswordModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Account Recovery</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <a href="home.php"><img src="Domain_picture/rp-logo.png" alt="RP LOGO" width="175" height="57"></a>
+                    <p style="color: #000000;">Provide the email address associated with your account to recover your password.</p>
+                </div>
+                <div class="forgot-password">
+                    <form class="forgot-password-container validate-form" name="forgot-password-form" action="home.php" method="POST">
+                        <div class="form-group">
+                            <label for="reset_email">Email address <span style="color: red;">*</span></label>
+                            <input type="email" name="reset_email" class="form-control" id="reset_email" autocomplete="off" value="<?php echo isset($_POST['reset_email']) ? $_POST['reset_email'] : ''; ?>" required pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" title="Invalid email address. You are missing an '@' and '.' in your email.">
+                        </div>
+                        <button type="submit" name="reset_password" class="btn btn-primary btn-block">Reset Password</button>
+                        <?php if (isset($message)) {
+                            echo "<div class='alert alert-danger mt-3'>$message</div>";
+                        } ?>
+                        <?php if (isset($message_success)) {
+                            echo "<div class='alert alert-success mt-3'>$message_success</div>";
+                        } ?>
+                        <div class="text-center mt-3">
+                            <a href="#" onclick="closeForgotPasswordAndShowLogin()">Back to Log in</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {
@@ -555,7 +779,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile_sbmt'])
     
     
     <div class="modal-containers" id="modalContainer">
-        <div class="modal-content" id="modalContent">
+        <div class="modal-contents" id="modalContent">
             <span class="close" onclick="closeModal()">&times;</span>
             <div id="modalImageContainer"></div>
             <h2 id="modalTitle"></h2>
@@ -720,6 +944,31 @@ function showYearSection(yearId) {
     document.getElementById(yearId).classList.add('active');
     event.target.classList.add('active');
 }
+
+function updateClickCount(projectID, domainName) {
+    if (!<?php echo json_encode($isAdmin); ?>) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'update_click_count1.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(`projectID=${projectID}&domainName=${domainName}`);
+    }
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (!<?php echo json_encode($isAdmin); ?>) {
+    var buttons = document.querySelectorAll('.learn-more-btn');
+    buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var projectID = button.getAttribute('data-project-id');
+            var domainName = button.getAttribute('data-domain-name');
+            updateClickCount(projectID, domainName);
+        });
+    });
+   }
+});
+
 </script>
 
     <button id="backToTopBtn" title="Back to Top">
@@ -742,34 +991,14 @@ function showYearSection(yearId) {
 
             // Smooth scroll to top
             $('#backToTopBtn').click(function() {
-                $('html, body').animate({scrollTop: 0}, 400);
+                $('html, body').animate({scrollTop: 0}, 10);
                 return false;
             });
 
         });
     </script>
 
-    <script>
-        function updateClickCount(projectID, domainName) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'update_click_count1.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(`projectID=${projectID}&domainName=${domainName}`);
-        }
-
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var buttons = document.querySelectorAll('.learn-more-btn');
-            buttons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var projectID = button.getAttribute('data-project-id');
-                    var domainName = button.getAttribute('data-domain-name');
-                    updateClickCount(projectID, domainName);
-                });
-            });
-        });
-    </script>
+   
 
 </body>
 </html>

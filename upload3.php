@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
  // Insert text into project table
-$stmt = $conn->prepare("INSERT INTO project (Project_title, Project_body, Organisation, Members, Supervisor, domain_id, Project_year, Project_semester) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO project (Project_title, Project_body, Organisation, Members, Supervisor, domain_id, year_id, Project_semester) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("ssssssis", $title, $body, $organisation, $members, $supervisor, $domain, $year, $semester);
 
 // Execute the statement
